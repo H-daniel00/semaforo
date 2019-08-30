@@ -1,0 +1,102 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}Semáforo de actividades | Registro{% endblock %}
+{% block extrastyles %}
+.avatar-filter{
+filter: opacity(0.1);
+}
+#registroP{
+margin-top:7%;
+}
+#registro{
+padding: 0px 25px 0 25px;
+}
+.vino{
+background-color: #892541;
+}
+.vino:hover{
+background-color: #892541;
+}
+.vino:focus{
+background-color: #892541;
+}
+button.btn, a.btn{
+width : 100%;
+}
+{% endblock %}
+{% block navbar %}{% endblock %}
+{% block maincontent %}
+<div class="container">
+    <div class="row" id="registroP">
+        <div class="col offset-l1 l10 z-depth-1 animated fadeIn" id="registro">
+            <h4 class="center-align">Registro de usuarios</h4>
+            <div class="divider"></div>
+            <br>
+            <div class="row">
+                <div class="col l5 m12 s12">
+                    <img class="responsive-img" src="{% static 'images/logo.png' %}" alt="">
+                    <br><br>
+                    <img src="{% static 'images/avatar.png' %}" alt="" id="avatar" class="avatar-filter responsive-img">
+                </div>
+                <div class="col l7 m12 s12">
+                    <form action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="input-field">
+                            <select name="direccion" id="id_direccion">
+                                <option value="" selected="">---------</option>
+                                {% for dir in direcciones %}
+                                <option value="{{dir.id}}">{{dir.nombre}}</option>
+                                {% endfor %}
+                            </select>
+                            <label for="id_">Seleccione una dirección</label>
+                            <span class="helper-text" data-error="wrong" data-success="right">Si no encuentra la
+                                dirección a la que pertenece, posiblemente alguien más la esté utlizando.</span>
+                        </div>
+                        <div class="input-field">
+                            {{fUsuario.first_name}}
+                            <label for="id_first_name">Ingrese su nombre</label>
+                        </div>
+                        <div class="input-field">
+                            {{fUsuario.username}}
+                            <label for="id_username">Ingrese nombre de usuario</label>
+                            <!-- <span class="helper-text" data-error="wrong" data-success="right">Será utilizado para la autenticación en el inicio de sesión.</span> -->
+                        </div>
+                        <div class="input-field">
+                            {{fUsuario.password}}
+                            <!-- <span class="helper-text" data-error="wrong" data-success="right">Será utilizado para la autenticación en el inicio de sesión.</span> -->
+                            <label for="id_password">Ingrese contraseña</label>
+                        </div>
+                        <div class="file-field input-field">
+                            <div class="btn vino">
+                                <span>Imagen</span>
+                                {{fUsuario.avatar}}
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col l6 m6 s12">
+                                <button class="btn vino right">Registrar</button>
+                            </div>
+                            <div class="col l6 m6 s12">
+                                <a href="{% url 'direccion:login' %}" class="btn grey">Volver</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extrafunctions %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.querySelectorAll('select');
+        var instances = M.FormSelect.init(elems);
+        registerUser()
+    });
+</script>
+{% endblock %}

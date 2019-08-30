@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'materialize/css/materialize.min.css' %}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'animate/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'sweetalert/sweetalert2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        {% block extrastyles %}
+        {% endblock %}
+    </style>
+</head>
+
+<body>
+    {% block navbar %}
+    <nav>
+        <div class="nav-wrapper" style="background-color: #892541">
+            <a href="#" class="brand-logo center">SEDEC</a>
+            <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="{% url 'direccion:logout' %}">Cerrar sesión</a></li>
+            </ul>
+        </div>
+    </nav>
+    <ul class="sidenav" id="mobile-demo">
+        <li><a href="{% url 'direccion:logout' %}">Cerrar sesión</a></li>
+    </ul>
+    {% endblock %}
+    {% block maincontent %}
+    {% endblock %}
+    <script src="{% static 'materialize/js/materialize.min.js' %}"></script>
+    <script src="{% static 'sweetalert/sweetalert2.min.js' %}"></script>
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/app.js' %}"></script>
+    {% include 'base/validaciones.html' %}
+    {% block extrafunctions %}{% endblock %}
+</body>
+
+</html>

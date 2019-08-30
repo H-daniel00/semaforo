@@ -1,0 +1,86 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}Semáforo de actividades{% endblock %}
+{% block extrastyles %}
+span.badge {
+min-width: 4rem;
+}
+.title-act{
+color: #892541;
+}
+.avatar-filter{
+filter: opacity(0.2);
+}
+{% endblock %}
+{% block navbar %}
+{% endblock %}
+{% block maincontent %}
+<div class="container">
+    <br>
+    <br>
+    <br>
+    <div class="row">
+        <div class="col l10 offset-l1 s12 m12">
+            <h4 class="center-align title-act">Actividades</h4>
+            <br><br>
+            {% for direc in direcciones %}
+            <div class="row">
+                <div class="col l3 center-align">
+                    {% if direc.titular.avatar %}
+                    <img src="{% get_media_prefix %}{{direc.titular.avatar}}" alt="" class="responsive-img">
+                    {% else %}
+                    <img src="{% static 'images/avatar.png' %}" alt="" class="avatar-filter responsive-img">
+                    {% endif %}
+                </div>
+                <div class="col l9">
+                    <h5>{{direc.nombre}}</h5>
+                    <h6>Titular: {{direc.titular.first_name}}</h6>
+                </div>
+            </div>
+            <ul class="collapsible">
+                {% for act in direc.actividades.all %}
+                <li>
+                    <div class="collapsible-header"><i class="material-icons">spellcheck</i>{{act.nombre}} <span
+                            class="badge white-text"
+                            style="background-color: {{act.get_light}}">{{act.get_porcent}}%</span></div>
+                    <div class="collapsible-body">
+                        <div class="act-objs">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th class="center-align">Nombre</th>
+                                        <th class="center-align">Hecho</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <h5 class="center-align">Objetivos</h5>
+                                    <br>
+                                    {% for obj in act.objetivos.all %}
+                                    <tr>
+                                        <td class="">{{obj.nombre}}</td>
+                                        <td class="center-align">
+                                            <span>{{ obj.is_done|yesno:"Sí,No,No" }}</span>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            <br><br><br>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extrafunctions %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var collapsible = document.querySelectorAll('.collapsible');
+        var collapsible_instances = M.Collapsible.init(collapsible);
+    });
+</script>
+{% endblock %}

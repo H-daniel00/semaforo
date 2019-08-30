@@ -1,0 +1,57 @@
+{% extends 'base/base.html' %}
+{% block title %}Semáforo de actividades | Admin{% endblock %}
+{% block maincontent %}
+<div class="container">
+    <h1>ESTAS LOGUEADO COMO ADMIN</h1>
+    <div class="divider"></div>
+    <form action="{% url 'admin:rUsuario' %}" method="post">
+        {% csrf_token %}
+        <div class="row">
+            <h5>Registro de usuarios</h5>
+            <div class="col l12">
+                <div class="input-field">
+                    {{fUsuario.username}}
+                    <label for="id_username">Usuario</label>
+                </div>
+                <div class="input-field">
+                    {{fUsuario.password}}
+                    <label for="id_password">Contraseña</label>
+                </div>
+                <div class="input-field">
+                    {{fUsuario.first_name}}
+                    <label for="id_first_name">Nombre</label>
+                </div>
+                <div class="input-field">
+                    {{fUsuario.direccion}}
+                </div>
+            </div>
+            <button type="submit" class="btn">Guardar</button>
+        </div>
+    </form>
+    <form action="{% url 'admin:rDireccion' %}" method="post">
+        {% csrf_token %}
+        <div class="row">
+            <h5>Registro de direcciones</h5>
+            <div class="col l12">
+                <div class="input-field">
+                    {{fDireccion.nombre}}
+                    <label for="id_nombre">Nombre</label>
+                </div>
+                <div class="input-field">
+                    {{fDireccion.codename}}
+                    <label for="id_password">Codename</label>
+                </div>
+            </div>
+            <button type="submit" class="btn">Guardar</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+{% block extrafunctions %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.querySelectorAll('select');
+        var instances = M.FormSelect.init(elems);
+    });
+</script>
+{% endblock %}

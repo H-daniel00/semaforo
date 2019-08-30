@@ -1,0 +1,158 @@
+{% extends 'base/base.html' %}
+{% block title %}Semáforo de actividades | {{user.direccion}} {% endblock %}
+{% block extrastyles %}
+a.btn-floating{
+background-color: #892541;
+}
+a.btn-floating:hover{
+background-color: #892541;
+}
+.vino{
+background-color: #892541;
+}
+.vino:hover{
+background-color: #892541;
+}
+.vino:focus{
+background-color: #892541;
+}
+span.badge {
+min-width: 4rem;
+}
+.title-direc{
+color: #892541;
+}
+{% endblock %}
+{% block direcName %}{{user.direccion.nombre}}{% endblock %}
+{% block maincontent %}
+<div class="container">
+    <br>
+    <br>
+    <br>
+    <!-- Show activities -->
+    <div class="row">
+        <div class="col l10 offset-l1 s12 m12">
+            <h4 class="center-align title-direc">{{user.direccion.nombre}}</h4>
+            <br>
+            <h5 class="center-align">Actividades</h5>
+            <ul class="collapsible">
+                {% for act in user.direccion.actividades.all %}
+                <li>
+                    <div class="collapsible-header"><i class="material-icons">spellcheck</i>{{act.nombre}} <span
+                            class="badge white-text"
+                            style="background-color: {{act.get_light}}">{{act.get_porcent}}%</span></div>
+                    <div class="collapsible-body">
+                        <div class="row right-align">
+                            <a href="{% url 'direccion:eActividad' act.pk %}" class="btn red del-obj">
+                                <i class="material-icons">delete</i>
+                            </a>
+                            <a class="btn blue edit-obj">
+                                <i class="material-icons">edit</i>
+                            </a>
+                        </div>
+                        <div class="act-objs">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th class="center-align">Nombre</th>
+                                        <th class="right-align">Hecho</th>
+                                        <th class="center-align">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <h5 class="center-align">Objetivos</h5>
+                                    <br>
+                                    {% for obj in act.objetivos.all %}
+                                    <tr>
+                                        <td class="">{{obj.nombre}}</td>
+                                        <td>
+                                            <label class="secondary-content"><input type="checkbox" class="obj-saved"
+                                                    {{ obj.is_done|yesno:"checked,," }} value="{{obj.id}}"><span></span>
+                                            </label>
+                                        </td>
+                                        <td class="center-align">
+                                            <a class="btn-small red del-obj">
+                                                <i class="material-icons">delete</i>
+                                            </a>
+                                            <a class="btn-small blue edit-obj">
+                                                <i class="material-icons">edit</i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <!-- Button new activity -->
+    <div class="fixed-action-btn">
+        <a class="btn-floating btn-large waves-effect waves-light modal-trigger" href="#act-modal"><i
+                class="material-icons">add</i></a>
+    </div>
+    <!-- Modal activity form -->
+    <div id="act-modal" class="modal modal-fixed-footer white">
+        <div class="modal-content">
+            <h5>Registro de actividad</h5>
+            <div class="divider"></div>
+            <div class="row">
+                <div class="col l10 offset-l1">
+                    <form action="{% url 'direccion:rActividad' %}" method="post" id="act-form">
+                        {% csrf_token %}
+                        <br>
+                        <div class="input-field">
+                            <input type="text" name="act-name" id="act-name">
+                            <label for="act-name">Nombre</label>
+                            {% if user.is_secretary %}
+                            <select name="" id="">
+                                <option value="">fdfs</option>
+                                <option value="">dsfdsf</option>
+                                <option value="">rerw</option>
+                            </select>
+                            {% endif %}
+                        </div>
+                        <br>
+                        <h5 class="center-align">Objetivos</h5>
+                        <a class="btn right vino" id="add-objs"><i class="material-icons">add</i></a>
+                        <br><br>
+                        <div id="act-objs">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th class="right-align">Hecho</th>
+                                        <th class="center-align">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="waves-effect waves-light btn vino" id="save-act" href="#act-modal">Guardar</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extrafunctions %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var modal = document.querySelectorAll('.modal');
+        var modal_instances = M.Modal.init(modal);
+        var collapsible = document.querySelectorAll('.collapsible');
+        var collapsible_instances = M.Collapsible.init(collapsible);
+        var elems = document.querySelectorAll('.sidenav');
+        var instances = M.Sidenav.init(elems);
+        var select = document.querySelectorAll('select');
+        var select_instances = M.FormSelect.init(select);
+    });
+</script>
+{% endblock %}
