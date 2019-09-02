@@ -33,7 +33,7 @@ def vPrinDirec(request):
     return render(request, 'direccion/prinDirec.html')
 
 def vPrincipal(request):
-    context = {'direcciones': Direcciones.objects.all() }
+    context = {'direcciones': Direcciones.objects.exclude(codename = 'sg') }
     return render(request, 'base/main.html', context)
 
 def vRegistroUsuarios(request):
@@ -70,26 +70,55 @@ def vRegistroUsuarios(request):
             messages.error(request,'Ha ocurrido un error. Intente de nuevo por favor')
             return redirect('direccion:rUsuario')
     else:
-        direcciones = Direcciones.objects.filter(titular = None)
         fUsuario = fRegistroUsuariosDir()
-        context = {'fUsuario' : fUsuario, 'direcciones' : direcciones}
+        context = {'fUsuario' : fUsuario}
     return render(request, 'base/registro.html', context)
 
+#---Actividades
 @login_required
 def vRegistroActividades(request):
     if request.method == 'POST':
         nombre = request.POST.get('act-name')
+        direccion = request.POST.get('direccion', None)
         objs = request.POST.getlist('obj-name')
         objs_check = request.POST.getlist('obj-check')
         try:
-            activity = Actividades.objects.create(nombre = nombre, direccion = request.user.direccion, usuario = request.user)
+            if direccion is None:
+                direccion = request.user.direccion
+            else:
+                direccion = Direcciones.objects.get(id__exact = direccion)
+            activity = Actividades.objects.create(nombre = nombre, direccion = direccion, usuario = request.user)
             for obj, checked in zip(objs, objs_check):
                 if len(obj) > 0:
-                    objetive = Objetivos.objects.create(nombre = obj, is_done = trueOrFalse(checked), actividad = activity)
+                    Objetivos.objects.create(nombre = obj, is_done = trueOrFalse(checked), actividad = activity)
             messages.success(request, 'Actividad agregada exitosamente')
         except:
             messages.error(request, 'Ha ocurrido un error, inténtelo de nuevo')
     return redirect('direccion:prinDirect')
+
+def vEditarActividad(request, id):
+    if request.is_ajax():
+        nombre = request.POST.get('new_name')
+        try:
+            act = Actividades.objects.get(id = id)
+            act.nombre = nombre
+            act.save()
+            info = {
+                'status' : 'success',
+                'text' : 'Actividad actualizada exitosamente'
+            }
+        except:
+            info = {
+                'status' : 'error',
+                'text' : 'Al parecer algo salió mal. Intente de nuevo'
+            }
+    else:
+        info = {
+            'status' : 'error',
+            'text' : 'Al parecer algo salió mal. Intente de nuevo'
+        }    
+    return JsonResponse(info, safe = False)
+
 
 @login_required
 def vEliminarActividades(request, id):
@@ -98,6 +127,43 @@ def vEliminarActividades(request, id):
         act.delete()
         messages.success(request, 'Actividad eliminada exitosamente')
     return redirect('direccion:prinDirect')
+
+#---Objetivos
+@login_required
+def vEliminarObjetivo(request, id):
+    if request.method == 'GET':
+        try:
+            obj = Objetivos.objects.get(id = id)
+            obj.delete()
+            messages.success(request, 'Objetivo eliminado exitosamente')
+        except:
+            messages.error(request, 'Ha ocurrido un error, inténtelo de nuevo')
+    else:
+        messages.error(request, 'Ha ocurrido un error, inténtelo de nuevo')
+    return redirect('direccion:prinDirect')
+
+def vEditarObjetivo(request, id):
+    if request.is_ajax():
+        nombre = request.POST.get('new_name')
+        try:
+            obj = Objetivos.objects.get(id = id)
+            obj.nombre = nombre
+            obj.save()
+            info = {
+                'status' : 'success',
+                'text' : 'Objetivo actualizado exitosamente'
+            }
+        except:
+            info = {
+                'status' : 'error',
+                'text' : 'Al parecer algo salió mal. Intente de nuevo'
+            }
+    else:
+        info = {
+            'status' : 'error',
+            'text' : 'Al parecer algo salió mal. Intente de nuevo'
+        }    
+    return JsonResponse(info, safe = False)
 
 @login_required
 def vEditarCheckObjetivo(request):

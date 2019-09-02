@@ -11,10 +11,79 @@ $(function(){
     $('#save-act').on('click', function(){
         $('#act-form').submit()
     })
-    $('.del-obj').on('click', function(e){
+    $('.del-act').on('click', function(e){
         e.preventDefault()
         Swal.fire({
             title: '¿Está seguro(a) de eliminar esta actividad?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí'
+        }).then((result) => {
+            if (result.value) {
+                location.href = $(this).attr('href')
+            }
+        })
+    })
+    $('.edit-act').on('click', function(e){
+        e.preventDefault()
+        let span = $(this).closest('li').find('.collapsible-header > span.act-name')
+        Swal.fire({
+            title: 'Editar actividad',
+            html: `<input type="text" id="act-new-name" value="${span.text()}" >`,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Guardar'
+        }).then((result) => {
+            if (result.value) {
+                let new_name = $('#act-new-name').val()
+                if(new_name.length > 0){
+                    if(new_name != span.text()){
+                        editActName($(this).attr('href'), new_name, span)
+                    }
+                    else{
+                        toastWarning('El nombre es el mismo, no se guardó ningún cambio')
+                    }
+                }
+                else{
+                    toastWarning('El nombre de la actividad no debe estar vacío')
+                }
+            }
+        })   
+    })
+    $('.edit-obj').on('click', function(e){
+        e.preventDefault()
+        let td = $(this).closest('tr').children('td').first()
+        Swal.fire({
+            title: 'Editar objetivo',
+            html: `<input type="text" id="obj-new-name" value="${td.text()}" >`,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Guardar'
+        }).then((result) => {
+            if (result.value) {
+                let new_name = $('#obj-new-name').val()
+                if(new_name.length > 0){
+                    if(new_name != td.text()){
+                        editObjName($(this).attr('href'), new_name, td)
+                    }
+                    else{
+                        toastWarning('El nombre es el mismo, no se guardó ningún cambio')
+                    }
+                }
+                else{
+                    toastWarning('El nombre de la actividad no debe estar vacío')
+                }
+            }
+        })   
+    })
+    $('.del-obj').on('click', function(e){
+        e.preventDefault()
+        Swal.fire({
+            title: '¿Está seguro(a) de eliminar este objetivo?',
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -39,9 +108,45 @@ function changeCheckObj(id, status_check, chck){
     }).done(function (result) {
         if (result.status === 'success') {
             toastSuccess(result.text)
-            let badge = chck.closest('li').find('div.collapsible-header > span')
+            let badge = chck.closest('li').find('div.collapsible-header > span.badge')
             badge.text(result.percent + '%')
             badge.css("background-color", result.color)
+        }
+        else if (result.status === 'error') {
+            toastError(result.text)
+        }
+    }).fail(function () {
+        console.log('Ha ocurrido un error inesperado :(')
+    })
+}
+
+function editActName(url, name, span){
+    $.ajax({
+        method: "POST",
+        url: url,
+        data: { csrfmiddlewaretoken: getCSRFTokenValue(), new_name : name}
+    }).done(function (result) {
+        if (result.status === 'success') {
+            toastSuccess(result.text)
+            span.text(name)
+        }
+        else if (result.status === 'error') {
+            toastError(result.text)
+        }
+    }).fail(function () {
+        console.log('Ha ocurrido un error inesperado :(')
+    })
+}
+
+function editObjName(url, name, td){
+    $.ajax({
+        method: "POST",
+        url: url,
+        data: { csrfmiddlewaretoken: getCSRFTokenValue(), new_name : name}
+    }).done(function (result) {
+        if (result.status === 'success') {
+            toastSuccess(result.text)
+            td.text(name)
         }
         else if (result.status === 'error') {
             toastError(result.text)

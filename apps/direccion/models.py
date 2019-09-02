@@ -40,8 +40,11 @@ class Objetivos(models.Model):
     actividad = models.ForeignKey(Actividades, null = True, blank = True, related_name = 'objetivos' , on_delete = models.CASCADE)
 
 def getPercentActivity(num, total):
-    percent = (100 * num)/total
-    return round(percent)
+    try:
+        percent = (100 * num)/total
+        return round(percent)
+    except:
+        return 0
 
 def getLightActivity(num, total):
     red_color = '#f44336'
@@ -49,14 +52,16 @@ def getLightActivity(num, total):
     yellow_color = '#ffeb3b'
     green_light = 100
     yellow_light = 70
-    percent = getPercentActivity(num, total)
-    if percent == green_light:
-        return green_color
-    elif percent < green_light and percent >= yellow_light:
-        return yellow_color
-    elif percent < yellow_light:
+    try:
+        percent = getPercentActivity(num, total)
+        if percent == green_light:
+            return green_color
+        elif percent < green_light and percent >= yellow_light:
+            return yellow_color
+        elif percent < yellow_light:
+            return red_color
+    except:
         return red_color
-
 
 
 
