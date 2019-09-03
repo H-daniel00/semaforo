@@ -14,17 +14,17 @@ color: #892541;
 {% block maincontent %}
 <div class="row">
     {% for direc in direcciones %}
-    <div class="col l3">
+    <div class="col l3 m6 s12">
         <div class="card-panel">
             <div class="row">
-                <div class="col l3">
+                <div class="col l3 m3 s3">
                     {% if direc.titular.avatar %}
                     <img src="{% get_media_prefix %}{{direc.titular.avatar}}" alt="" class="responsive-img">
                     {% else %}
                     <img src="{% static 'images/avatar.png' %}" alt="" class="avatar-filter responsive-img">
                     {% endif %}
                 </div>
-                <div class="col l9">
+                <div class="col l9 m9 s9">
                     <h6 class=""><b>{{direc.nombre}}</b></h6>
                 </div>
             </div>
@@ -52,7 +52,7 @@ color: #892541;
 {% block extrafunctions %}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // setTimeout('document.location.reload()', 10000);
+        setTimeout('document.location.reload()', 10000);
     });
 </script>
 {% endblock %}

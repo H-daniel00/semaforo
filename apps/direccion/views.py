@@ -165,6 +165,37 @@ def vEditarObjetivo(request, id):
         }    
     return JsonResponse(info, safe = False)
 
+def vAgregarObjetivos(request):
+    if request.is_ajax():
+        obj_name = request.POST.get('obj_name')
+        obj_check = request.POST.get('obj_check')
+        act_id = request.POST.get('act_id')
+        try:
+            act = Actividades.objects.get(id__exact = act_id)
+            obj = Objetivos.objects.create(nombre = obj_name, is_done = trueOrFalse(obj_check), actividad = act)
+            info = {
+                'status' : 'success',
+                'text' : 'Objetivo agregado exitosamente',
+                'obj_value': obj.id,
+                'percent' : obj.actividad.get_porcent(),
+                'color' : obj.actividad.get_light(),
+                'delete_url' : redirect('direccion:eObjetivo', id = obj.id).url, 
+                'edit_url' : redirect('direccion:edObjetivo', id = obj.id).url
+            }
+        except Exception as identifier:
+            print(identifier)
+            info = {
+                'status' : 'error',
+                'text' : 'Al parecer algo salió mal. Intente de nuevo'
+            }
+    else:
+        info = {
+            'status' : 'error',
+            'text' : 'Al parecer algo salió mal. Intente de nuevo'
+        }
+    return JsonResponse(info, safe = False)
+
+
 @login_required
 def vEditarCheckObjetivo(request):
     if request.is_ajax():

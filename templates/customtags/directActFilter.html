@@ -16,6 +16,44 @@
     </div>
     <ul class="collapsible">
         {% for act in activities %}
+        {% if act.usuario.is_secretary %}
+        <li>
+            <div class="collapsible-header"><i class="material-icons">spellcheck</i><span
+                    class="act-name">{{act.nombre}}</span><span class="badge white-text"
+                    style="background-color: {{act.get_light}}">{{act.get_porcent}}%</span>
+            </div>
+            <div class="collapsible-body">
+                <div class="act-objs" data-id="{{act.id}}">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="center-align">Nombre</th>
+                                <th class="right-align">Hecho</th>
+                                <th class="center-align">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <h5 class="center-align">Objetivos</h5>
+                            <br>
+                            {% for obj in act.objetivos.all %}
+                            <tr>
+                                <td class="">{{obj.nombre}}</td>
+                                <td>
+                                    <label class="secondary-content"><input type="checkbox" class="obj-saved"
+                                            {{ obj.is_done|yesno:"checked,," }} value="{{obj.id}}"><span></span>
+                                    </label>
+                                </td>
+                                <td class="center-align">
+                                    <span>Sin acciones</span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </li>
+        {% else %}
         <li>
             <div class="collapsible-header"><i class="material-icons">spellcheck</i><span
                     class="act-name">{{act.nombre}}</span><span class="badge white-text"
@@ -29,9 +67,9 @@
                     <a class="btn blue edit-act" href="{% url 'direccion:edActividad' act.id %}">
                         <i class="material-icons">edit</i>
                     </a>
-                    <a class="btn blue" id="add-objs"><i class="material-icons">add</i></a>
+                    <a class="btn blue add-saved-objs"><i class="material-icons">add</i></a>
                 </div>
-                <div class="act-objs">
+                <div class="act-objs" data-id="{{act.id}}">
                     <table>
                         <thead>
                             <tr>
@@ -66,6 +104,7 @@
                 </div>
             </div>
         </li>
+        {% endif %}
         {% endfor %}
     </ul>
 </div>
