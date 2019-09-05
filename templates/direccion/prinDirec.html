@@ -91,6 +91,7 @@ color: #892541;
 {% block extrafunctions %}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        formActivity()
         var modal = document.querySelectorAll('.modal');
         var modal_instances = M.Modal.init(modal);
         var collapsible = document.querySelectorAll('.collapsible');

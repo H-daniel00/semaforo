@@ -1,40 +1,46 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% block extrarlink %}
+<link rel="stylesheet" href="{% static 'scrollpage/pagepiling.min.css' %}">
+{% endblock %}
 {% block title %}Semáforo de actividades{% endblock %}
 {% block extrastyles %}
 span.badge {
 min-width: 4rem;
 }
-.title-act{
-color: #892541;
+.vino{
+background-color: #C73C63;
 }
 {% endblock %}
 {% block navbar %}
 {% endblock %}
 {% block maincontent %}
-<div class="row">
-    {% for direc in direcciones %}
-    <div class="col l3 m6 s12">
-        <div class="card-panel">
+<!-- <ul id="myMenu">
+    <li data-menuanchor="firstPage" class="active"><a href="#firstPage">First section</a></li>
+    <li data-menuanchor="secondPage"><a href="#secondPage">Second section</a></li>
+    <li data-menuanchor="thirdPage"><a href="#thirdPage">Third section</a></li>
+    <li data-menuanchor="fourthPage"><a href="#fourthPage">Fourth section</a></li>
+</ul> -->
+<div id="pagepiling">
+    <br>
+    {% for direct in direcciones %}
+    <div class="section white">
+        <div class="container">
             <div class="row">
-                <div class="col l3 m3 s3">
-                    {% if direc.titular.avatar %}
-                    <img src="{% get_media_prefix %}{{direc.titular.avatar}}" alt="" class="responsive-img">
+                <div class="col l2 center-align">
+                    {% if direct.titular.avatar %}
+                    <img src="{% get_media_prefix %}{{direct.titular.avatar}}" alt="" class="responsive-img">
                     {% else %}
                     <img src="{% static 'images/avatar.png' %}" alt="" class="avatar-filter responsive-img">
                     {% endif %}
                 </div>
-                <div class="col l9 m9 s9">
-                    <h6 class=""><b>{{direc.nombre}}</b></h6>
-                </div>
-            </div>
-            <div class="row">
-                <div class="center-align col l12">
-                    <h6>Titular: {{direc.titular.first_name}}</h6>
+                <div class="col l10">
+                    <h5>{{direct.nombre}}</h5>
+                    <h6>Titular: {{direct.titular.first_name}}</h6>
                 </div>
             </div>
             <ul class="collapsible">
-                {% for act in direc.actividades.all %}
+                {% for act in direct.actividades.all %}
                 <li>
                     <div class="collapsible-header"><i class="material-icons">spellcheck</i>{{act.nombre}} <span
                             class="badge white-text"
@@ -50,9 +56,70 @@ color: #892541;
 </div>
 {% endblock %}
 {% block extrafunctions %}
+<script src="{% static 'scrollpage/pagepiling.min.js' %}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        setTimeout('document.location.reload()', 10000);
+        document.addEventListener ('keydown', function (event){
+            console.log (event.which);
+        });
+        $('#pagepiling').pagepiling({
+            direction: 'horizontal',
+            menu: '#myMenu',
+            verticalCentered: false,
+            loopTop: true,
+            loopBottom: true
+        }); 
+
+        var evt = new KeyboardEvent('keydown', {'keyCode':39, 'which':39});
+        setTimeout(function(){
+            console.log('dgdfgfd');
+            // document.dispatchEvent(evt)
+        }, 3000);
+        // var cards = document.querySelectorAll('.card-panel .collapsible')
+        // cards.forEach(function (element) {
+        //     let badges = element.querySelectorAll('li .badge');
+        //     let aux;
+        //     let aux2;
+        //     // badges.forEach(function (element1, i) {
+        //     //     badges.forEach(function (element2, j) {
+        //     //         let Ulparent = badges[j].parentElement.parentElement.parentElement
+        //     //         aux = badges[j].parentElement.parentElement
+        //     //         aux2 = badges[j + 1].parentElement.parentElement
+        //     //         console.log(aux, aux2)
+        //     //         // console.log(aux.parentElement)
+        //     //         // Los ocultamos
+        //     //         // badges[j].parentElement.parentElement.style.display = 'none'
+        //     //         // badges[j + 1].parentElement.parentElement.style.display = 'none'
+        //     //         // Luego insertamos lo clonado
+        //     //         // Ulparent.insertBefore(aux, aux2)
+        //     //         // Ulparent.insertBefore(aux2, aux)
+        //     //         // badges[j].parentElement.parentElement.remove()
+        //     //         // badges[j + 1].parentElement.parentElement.remove()
+        //     //     });
+        //     // });
+        //     for (let i = 0; i < badges.length-1; i++) {
+        //         for (let j = 0; j < badges.length-1; j++) {
+        //             if(parseInt(badges[j].textContent.slice(0, badges[j].textContent.indexOf('%'))) > parseInt(badges[j+1].textContent.slice(0, badges[j+1].textContent.indexOf('%')))){
+        //                 // Clonamos los elementos li
+        //                 let Ulparent = badges[j].parentElement.parentElement.parentElement
+        //                 // aux = badges[j].parentElement.parentElement.cloneNode(true)
+        //                 // aux2 = badges[j+1].parentElement.parentElement.cloneNode(true)
+        //                 // Los ocultamos
+        //                 // badges[j].parentElement.parentElement.style.display = 'none'
+        //                 // badges[j+1].parentElement.parentElement.style.display = 'none'
+        //                 // Luego insertamos lo clonado
+        //                 Ulparent.insertBefore(badges[j+1].parentElement.parentElement, badges[j].parentElement.parentElement)
+        //                 Ulparent.insertBefore(badges[j].parentElement.parentElement, badges[j+1].parentElement.parentElement)
+        //                 // badges[j].parentElement.parentElement.remove()
+        //                 // badges[j+1].parentElement.parentElement.remove()
+        //             }
+        //         } 
+        //     }
+        // });
     });
+
+    function orderActivities() {
+
+    }
 </script>
 {% endblock %}

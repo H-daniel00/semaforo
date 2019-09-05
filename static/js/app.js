@@ -25,9 +25,6 @@ $(function () {
             $(this).closest('tr').remove()
         })
     })
-    $('#save-act').on('click', function () {
-        $('#act-form').submit()
-    })
     $('.del-act').on('click', function (e) {
         e.preventDefault()
         Swal.fire({
@@ -261,3 +258,92 @@ function getCSRFTokenValue() {
     var token = $('input[name="csrfmiddlewaretoken"]').val()
     return token
 }
+
+//form validators
+function formRegisUser() {
+    document.querySelector('#saveUser').addEventListener('click', function (e) {
+        e.preventDefault()
+        let formUser = document.querySelector('#formUser')
+        let direction = formUser.querySelector('#id_direccion')
+        let name = formUser.querySelector('#id_first_name')
+        let last_name = formUser.querySelector('#id_last_name')
+        let username = formUser.querySelector('#id_username')
+        let password = formUser.querySelector('#id_password')
+        if (direction.value === '0' || direction.value === '') {
+            toastWarning('Debe de seleccionar una dirección')
+        }
+        else if (name.value.trim().length === 0) {
+            toastWarning('Debe de ingresar su nombre')
+        }
+        else if (last_name.value.trim().length === 0){
+            toastWarning('Debe de ingresar su apellido')
+        }
+        else if (username.value.trim().length === 0) {
+            toastWarning('Debe de ingresar un usuario')
+        }
+        else if (password.value.trim().length === 0) {
+            toastWarning('Debe de ingresar una contraseña')
+        }
+        else {
+            name.value = name.value.trim()
+            last_name.value = last_name.value.trim()
+            username.value = username.value.trim()
+            password.value = password.value.trim()
+            formUser.submit()
+        }
+    })
+}
+
+function formLogin(){
+    document.querySelector('#accessLogin').addEventListener('click', function(e){
+        e.preventDefault()
+        let formLogin = document.querySelector('#formLogin')
+        let username = formLogin.querySelector('#username')
+        let password = formLogin.querySelector('#password')
+        if (username.value.trim().length === 0){
+            toastWarning('Debe de ingresar un usuario')
+        }
+        else if (password.value.trim().length === 0){
+            toastWarning('Debe de ingresar una contraseña')
+        }
+        else{
+            username.value = username.value.trim()
+            password.value = password.value.trim()
+            formLogin.submit()
+        }
+    })
+}
+
+function formActivity(){
+    document.querySelector('#save-act').addEventListener('click', function(){
+        let formAct = document.querySelector('#act-form')
+        let activity_name = formAct.querySelector('#act-name')
+        let objs = formAct.querySelector('#act-objs > table > tbody')
+        console.log(objs)
+        if (activity_name.value.trim().length === 0){
+            toastWarning('Debe de ingresar un nombre de actividad')
+        }
+        else{
+            activity_name.value = activity_name.value.trim()
+            // formAct.submit()
+        }
+    })
+}
+
+// function formObjective(){
+//     alert('ffrromobej')
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
