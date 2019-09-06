@@ -3,6 +3,7 @@ from .views import (vLogin, vLogout, vPrinDirec,
                     vRegistroActividades, vEliminarActividades, vEditarActividad, 
                     vEditarCheckObjetivo, vEliminarObjetivo, vEditarObjetivo, vAgregarObjetivos,
                     vRegistroUsuarios)
+from .download_evidences import descargarEvidenciasZip
 app_name = 'direccion'
 
 urlpatterns = [
@@ -15,6 +16,8 @@ urlpatterns = [
     path('actividad/<int:id>/eliminar', vEliminarActividades, name = 'eActividad'),
     #Objetivos
     path('actividad/objetivo/<int:id>/eliminar', vEliminarObjetivo, name = 'eObjetivo'),
+    #Evidencias
+    path('actividad/<int:id>/evidencias/descargar', descargarEvidenciasZip, name = 'desEvidencias'),
     #Ajax
     path('ajax/actividad/objetivo/editarcheck', vEditarCheckObjetivo),
     path('ajax/actividad/<int:id>/editar', vEditarActividad, name = 'edActividad'),

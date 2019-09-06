@@ -3,7 +3,7 @@
 <div class="row">
     <div class="col l2 center-align">
         {% if direct.titular.avatar %}
-        <img src="{% get_media_prefix %}{{direc.titular.avatar}}" alt="" class="responsive-img">
+        <img src="{% get_media_prefix %}{{direct.titular.avatar}}" alt="" class="responsive-img">
         {% else %}
         <img src="{% static 'images/avatar.png' %}" alt="" class="avatar-filter responsive-img">
         {% endif %}
@@ -36,6 +36,35 @@
                             <td class="">{{obj.nombre}}</td>
                             <td class="center-align">
                                 <span>{{ obj.is_done|yesno:"Sí,No,No" }}</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="act-evidencias">
+                <br>
+                <h5 class="center-align">Evidencias</h5>
+                {% if act.evidencias.count > 0 %}
+                <a class="btn vino right" href="{% url 'direccion:desEvidencias' act.id %}"><i
+                        class="material-icons left">file_download</i>zip</a>
+                {% endif %}
+                <br>
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="center-align">Nombre</th>
+                            <th class="center-align">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for evi in act.evidencias.all %}
+                        <tr>
+                            <td>{{evi.nombre}}</td>
+                            <td class="center-align">
+                                <a class="btn-small blue" href="{% get_media_prefix %}{{evi.evidencia}}" download>
+                                    <i class="material-icons">file_download</i>
+                                </a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -86,6 +115,35 @@
                                 </a>
                                 <a class="btn-small blue edit-obj" href="{% url 'direccion:edObjetivo' obj.id %}">
                                     <i class="material-icons">edit</i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="act-evidencias">
+                <br>
+                <h5 class="center-align">Evidencias</h5>
+                {% if act.evidencias.count > 0 %}
+                <a class="btn vino right" href="{% url 'direccion:desEvidencias' act.id %}"><i
+                        class="material-icons left">file_download</i>zip</a>
+                {% endif %}
+                <br>
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="center-align">Nombre</th>
+                            <th class="center-align">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for evi in act.evidencias.all %}
+                        <tr>
+                            <td>{{evi.nombre}}</td>
+                            <td class="center-align">
+                                <a class="btn-small blue" href="{% get_media_prefix %}{{evi.evidencia}}" download>
+                                    <i class="material-icons">file_download</i>
                                 </a>
                             </td>
                         </tr>

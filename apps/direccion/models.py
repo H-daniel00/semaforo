@@ -20,6 +20,7 @@ class Usuarios(AbstractUser):
 
 class Actividades(models.Model):
     nombre = models.CharField(max_length = 200)
+    folio = models.CharField(max_length = 10, null = True, blank = True)
     timestamp = models.DateTimeField(auto_now = True)
     direccion = models.ForeignKey(Direcciones, null = True, blank = True, related_name = 'actividades' , on_delete = models.CASCADE)
     usuario = models.ForeignKey(Usuarios, blank = True, on_delete = models.CASCADE)
@@ -33,6 +34,15 @@ class Actividades(models.Model):
         total = self.objetivos.count()
         total_done = self.objetivos.filter(is_done = True).count()
         return getLightActivity(total_done, total)
+
+def act_directory_path(instance, filename):
+    return 'evidencias/{0}/{1}'.format(instance.actividad.folio,filename)
+
+class Evidencias(models.Model):
+    evidencia = models.FileField(upload_to = act_directory_path, null = True, blank = True)
+    nombre = models.CharField(max_length = 500)
+    timestamp = models.DateTimeField(auto_now = True)
+    actividad = models.ForeignKey(Actividades, null = True, blank = True, related_name = 'evidencias' , on_delete = models.CASCADE)
 
 class Objetivos(models.Model):
     nombre = models.CharField(max_length = 200)
@@ -62,6 +72,3 @@ def getLightActivity(num, total):
             return red_color
     except:
         return red_color
-
-
-

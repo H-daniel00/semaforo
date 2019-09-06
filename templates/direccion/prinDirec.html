@@ -33,9 +33,9 @@ color: #892541;
     <br>
     <br>
     {% if user.is_secretary %}
-        {% showAllDirecActivities %}
+    {% showAllDirecActivities %}
     {% else %}
-        {% showFilterDirectActivities user %}
+    {% showFilterDirectActivities user %}
     {% endif %}
     <!-- Button new activity -->
     <div class="fixed-action-btn">
@@ -49,7 +49,8 @@ color: #892541;
             <div class="divider"></div>
             <div class="row">
                 <div class="col l10 offset-l1">
-                    <form action="{% url 'direccion:rActividad' %}" method="post" id="act-form">
+                    <form action="{% url 'direccion:rActividad' %}" method="post" id="act-form"
+                        enctype="multipart/form-data">
                         {% csrf_token %}
                         <br>
                         <div class="input-field">
@@ -78,6 +79,20 @@ color: #892541;
                                 </tbody>
                             </table>
                         </div>
+                        <br><br>
+                        <h5 class="center-align">Evidencias</h5>
+                        <div class="file-field input-field">
+                            <div class="btn vino">
+                                <span>Seleccionar</span>
+                                <input type="file" name="evidencias" id="evidencias" multiple>
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path" type="text">
+                                <span class="helper-text">5 MB es el peso límite por archivo</span>
+                            </div>
+                        </div>
+                        <ul class="collection" id="files">
+                        </ul>
                     </form>
                 </div>
             </div>

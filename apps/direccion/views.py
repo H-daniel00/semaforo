@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login as auth_login , authenticate, logout
 from django.contrib import messages
-from .models import Usuarios, Actividades, Objetivos, Direcciones, getPercentActivity, getLightActivity
+from .models import Usuarios, Actividades, Objetivos, Direcciones, Evidencias, getPercentActivity, getLightActivity
 from .forms import fRegistroUsuariosDir
 
 def vLogin(request):
@@ -82,17 +82,25 @@ def vRegistroActividades(request):
         direccion = request.POST.get('direccion', None)
         objs = request.POST.getlist('obj-name')
         objs_check = request.POST.getlist('obj-check')
+        evidencias = request.FILES.getlist('evidencias')
+        folio = 'ACT-'
         try:
             if direccion is None:
                 direccion = request.user.direccion
             else:
                 direccion = Direcciones.objects.get(id__exact = direccion)
             activity = Actividades.objects.create(nombre = nombre, direccion = direccion, usuario = request.user)
+            activity.folio = folio + str(activity.id)
+            activity.save()
             for obj, checked in zip(objs, objs_check):
                 if len(obj) > 0:
+                    pass
                     Objetivos.objects.create(nombre = obj, is_done = trueOrFalse(checked), actividad = activity)
+            for evidencia in evidencias:
+                Evidencias.objects.create(evidencia = evidencia, nombre = evidencia.name, actividad = activity)
             messages.success(request, 'Actividad agregada exitosamente')
-        except:
+        except Exception as e:
+            print(e)
             messages.error(request, 'Ha ocurrido un error, inténtelo de nuevo')
     return redirect('direccion:prinDirect')
 

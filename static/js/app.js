@@ -1,4 +1,13 @@
 $(function () {
+    $('.add-saved-files').on('click', function(){
+        $(this).parent().next('.cont-file').show()
+    })
+    $('.del-new-files').on('click', function(){
+        $(this).closest('.cont-file').hide()
+    })
+    $('input[name="evidencias"]').on('change', function(e){
+        showFiles($(this),e.target.files)
+    })  
     $('#add-objs').on('click', function () {
         $('#act-objs > table > tbody').append('<tr><td class="center-align"><input type="text" name="obj-name"></td><td><label class="secondary-content"><input type="checkbox" class="obj-check"/><span></span></label><input type="hidden" name="obj-check" value="false"/></td><td class="center-align"><a class="btn-small red del-objs"><i class="material-icons">delete</i></a></td></tr>')
         $('.del-objs').last().on('click', function () {
@@ -10,7 +19,7 @@ $(function () {
     })
     $('.add-saved-objs').on('click', function () {
         let tbody = $(this).parent().siblings('.act-objs').find('table').find('tbody')
-        tbody.append('<tr><td class=""><input type="text"></td><td><label class="secondary-content"><input type="checkbox" class="" value=""><span></span></label></td><td class="center-align"><a class="btn-small green save-new-obj" href="#"><i class="material-icons">check</i></a>&nbsp;<a class="btn-small red del-new-obj" href="#"><i class="material-icons">delete</i></a></td></tr>')
+        tbody.append('<tr><td class=""><input type="text"></td><td><label class="secondary-content"><input type="checkbox" class="" value=""><span></span></label></td><td class="center-align"><a class="btn-small green save-new-obj" href="#"><i class="material-icons">check</i></a>&nbsp;<a class="btn-small red del-new-obj" href="#"><i class="material-icons">clear</i></a></td></tr>')
         let btns = tbody.children('tr').last().children('td').last().children('a')
         $(btns[0]).on('click', function (e) {
             e.preventDefault()
@@ -18,7 +27,12 @@ $(function () {
             let checkbox = $($(this).closest('tr').children('td')[1]).find('input')
             let id_act = $(this).closest('.act-objs').attr('data-id')
             let badge = $(this).closest('li').find('div.collapsible-header > span.badge')
-            addNewObj(input, checkbox, id_act, badge, $(this))
+            if (input.val().trim().length === 0) {
+                toastWarning('Debe de agregar un nombre de objetivo')
+            }
+            else {
+                addNewObj(input, checkbox, id_act, badge, $(this))
+            }
         })
         $(btns[1]).on('click', function (e) {
             e.preventDefault()
@@ -62,7 +76,7 @@ $(function () {
                     }
                 }
                 else {
-                    toastWarning('El nombre de la actividad no debe estar vacío')
+                    toastWarning('Debe de agregar un nombre de actividad')
                 }
             }
         })
@@ -89,7 +103,7 @@ $(function () {
                     }
                 }
                 else {
-                    toastWarning('El nombre de la actividad no debe estar vacío')
+                    toastWarning('Debe de agregar un nombre de objetivo')
                 }
             }
         })
@@ -254,6 +268,21 @@ function registerUser() {
     });
 }
 
+function showFiles(ele, files){
+    let ulFiles = ele.closest('.file-field').next('.collection')
+    let max_size = 5242880 //5 megabytes
+    ulFiles.empty()
+    for (let i = 0; i < files.length; i++) {
+        if (files[i].size <= max_size) {
+            ulFiles.append(`<li class="collection-item">${files[i].name}</li>`)
+        }
+        else{
+            ulFiles.append(`<li class="collection-item red-text">${files[i].name} - Excede el peso permitido</li>`)
+            toastWarning('Archivos inválidos detectados. Por favor vuelva a elegirlos correctamente')
+        }
+    }
+}
+
 function getCSRFTokenValue() {
     var token = $('input[name="csrfmiddlewaretoken"]').val()
     return token
@@ -275,7 +304,7 @@ function formRegisUser() {
         else if (name.value.trim().length === 0) {
             toastWarning('Debe de ingresar su nombre')
         }
-        else if (last_name.value.trim().length === 0){
+        else if (last_name.value.trim().length === 0) {
             toastWarning('Debe de ingresar su apellido')
         }
         else if (username.value.trim().length === 0) {
@@ -294,19 +323,19 @@ function formRegisUser() {
     })
 }
 
-function formLogin(){
-    document.querySelector('#accessLogin').addEventListener('click', function(e){
+function formLogin() {
+    document.querySelector('#accessLogin').addEventListener('click', function (e) {
         e.preventDefault()
         let formLogin = document.querySelector('#formLogin')
         let username = formLogin.querySelector('#username')
         let password = formLogin.querySelector('#password')
-        if (username.value.trim().length === 0){
+        if (username.value.trim().length === 0) {
             toastWarning('Debe de ingresar un usuario')
         }
-        else if (password.value.trim().length === 0){
+        else if (password.value.trim().length === 0) {
             toastWarning('Debe de ingresar una contraseña')
         }
-        else{
+        else {
             username.value = username.value.trim()
             password.value = password.value.trim()
             formLogin.submit()
@@ -314,26 +343,39 @@ function formLogin(){
     })
 }
 
-function formActivity(){
-    document.querySelector('#save-act').addEventListener('click', function(){
+function formActivity() {
+    document.querySelector('#save-act').addEventListener('click', function () {
         let formAct = document.querySelector('#act-form')
         let activity_name = formAct.querySelector('#act-name')
-        let objs = formAct.querySelector('#act-objs > table > tbody')
-        console.log(objs)
-        if (activity_name.value.trim().length === 0){
+        let objs = formAct.querySelectorAll('#act-objs > table > tbody tr ')
+        if (activity_name.value.trim().length === 0) {
             toastWarning('Debe de ingresar un nombre de actividad')
         }
-        else{
-            activity_name.value = activity_name.value.trim()
-            // formAct.submit()
+        else if (objs.length === 0) {
+            toastWarning('Debe de agregar al menos un objetivo en la actividad')
+        }
+        else {
+            let verify = true
+            if (objs.length > 0) {
+                for (let i = 0; i < objs.length; i++) {
+                    if (objs[i].querySelector('td').querySelector('input').value.trim().length === 0) {
+                        objs[i].querySelector('td').querySelector('input').value = objs[i].querySelector('td').querySelector('input').value.trim()
+                        verify = false
+                        toastWarning('Debe de agregar un nombre al objetivo')
+                        break
+                    }
+                }
+                if (verify) {
+                    for (let i = 0; i < objs.length; i++) {
+                        objs[i].querySelector('td').querySelector('input').value = objs[i].querySelector('td').querySelector('input').value.trim()
+                    }
+                    activity_name.value = activity_name.value.trim()
+                    formAct.submit()
+                }
+            }
         }
     })
 }
-
-// function formObjective(){
-//     alert('ffrromobej')
-// }
-
 
 
 
