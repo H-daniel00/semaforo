@@ -1,125 +1,178 @@
 {% extends 'base/base.html' %}
 {% load static %}
 {% block extrarlink %}
-<link rel="stylesheet" href="{% static 'scrollpage/pagepiling.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'slick/slick.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'slick/slick-theme.css' %}" />
 {% endblock %}
 {% block title %}Semáforo de actividades{% endblock %}
 {% block extrastyles %}
+.container{
+width: 100% !important;
+margin-top: 5%;
+}
 span.badge {
 min-width: 4rem;
 }
 .vino{
 background-color: #C73C63;
 }
+.direction{
+padding: 10px;
+}
 {% endblock %}
 {% block navbar %}
 {% endblock %}
 {% block maincontent %}
-<!-- <ul id="myMenu">
-    <li data-menuanchor="firstPage" class="active"><a href="#firstPage">First section</a></li>
-    <li data-menuanchor="secondPage"><a href="#secondPage">Second section</a></li>
-    <li data-menuanchor="thirdPage"><a href="#thirdPage">Third section</a></li>
-    <li data-menuanchor="fourthPage"><a href="#fourthPage">Fourth section</a></li>
-</ul> -->
-<div id="pagepiling">
-    <br>
-    {% for direct in direcciones %}
-    <div class="section white">
-        <div class="container">
-            <div class="row">
-                <div class="col l2 center-align">
-                    {% if direct.titular.avatar %}
-                    <img src="{% get_media_prefix %}{{direct.titular.avatar}}" alt="" class="responsive-img">
-                    {% else %}
-                    <img src="{% static 'images/avatar.png' %}" alt="" class="avatar-filter responsive-img">
-                    {% endif %}
-                </div>
-                <div class="col l10">
-                    <h5>{{direct.nombre}}</h5>
-                    <h6>Titular: {{direct.titular.first_name}}</h6>
-                </div>
-            </div>
-            <ul class="collapsible">
-                {% for act in direct.actividades.all %}
-                <li>
-                    <div class="collapsible-header"><i class="material-icons">spellcheck</i>{{act.nombre}} <span
-                            class="badge white-text"
-                            style="background-color: {{act.get_light}}">{{act.get_porcent}}%</span>
-                    </div>
-
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
-    {% endfor %}
+<button class="btn viewSlide"><i class="material-icons">view_carousel</i></button>
+<button class="btn viewModule"><i class="material-icons">view_module</i></button>
+<div class="container">
+    <div class="directions-slider"></div>
+    <div class="directions-module row"></div>
 </div>
 {% endblock %}
 {% block extrafunctions %}
-<script src="{% static 'scrollpage/pagepiling.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'slick/slick.js' %}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        document.addEventListener ('keydown', function (event){
-            console.log (event.which);
+        document.querySelector('.viewSlide').addEventListener('click', function(){
+            $('.directions-slider').show()
+            $('.directions-module').hide()      
+        })
+        document.querySelector('.viewModule').addEventListener('click', function(){
+            $('.directions-slider').hide()
+            $('.directions-module').show()
+        })
+        $('.directions-slider').slick({
+            slidesToShow: 2,
+            autoplay: true,
+            autoplaySpeed: 1000
         });
-        $('#pagepiling').pagepiling({
-            direction: 'horizontal',
-            menu: '#myMenu',
-            verticalCentered: false,
-            loopTop: true,
-            loopBottom: true
-        }); 
-
-        var evt = new KeyboardEvent('keydown', {'keyCode':39, 'which':39});
-        setTimeout(function(){
-            console.log('dgdfgfd');
-            // document.dispatchEvent(evt)
-        }, 3000);
-        // var cards = document.querySelectorAll('.card-panel .collapsible')
-        // cards.forEach(function (element) {
-        //     let badges = element.querySelectorAll('li .badge');
-        //     let aux;
-        //     let aux2;
-        //     // badges.forEach(function (element1, i) {
-        //     //     badges.forEach(function (element2, j) {
-        //     //         let Ulparent = badges[j].parentElement.parentElement.parentElement
-        //     //         aux = badges[j].parentElement.parentElement
-        //     //         aux2 = badges[j + 1].parentElement.parentElement
-        //     //         console.log(aux, aux2)
-        //     //         // console.log(aux.parentElement)
-        //     //         // Los ocultamos
-        //     //         // badges[j].parentElement.parentElement.style.display = 'none'
-        //     //         // badges[j + 1].parentElement.parentElement.style.display = 'none'
-        //     //         // Luego insertamos lo clonado
-        //     //         // Ulparent.insertBefore(aux, aux2)
-        //     //         // Ulparent.insertBefore(aux2, aux)
-        //     //         // badges[j].parentElement.parentElement.remove()
-        //     //         // badges[j + 1].parentElement.parentElement.remove()
-        //     //     });
-        //     // });
-        //     for (let i = 0; i < badges.length-1; i++) {
-        //         for (let j = 0; j < badges.length-1; j++) {
-        //             if(parseInt(badges[j].textContent.slice(0, badges[j].textContent.indexOf('%'))) > parseInt(badges[j+1].textContent.slice(0, badges[j+1].textContent.indexOf('%')))){
-        //                 // Clonamos los elementos li
-        //                 let Ulparent = badges[j].parentElement.parentElement.parentElement
-        //                 // aux = badges[j].parentElement.parentElement.cloneNode(true)
-        //                 // aux2 = badges[j+1].parentElement.parentElement.cloneNode(true)
-        //                 // Los ocultamos
-        //                 // badges[j].parentElement.parentElement.style.display = 'none'
-        //                 // badges[j+1].parentElement.parentElement.style.display = 'none'
-        //                 // Luego insertamos lo clonado
-        //                 Ulparent.insertBefore(badges[j+1].parentElement.parentElement, badges[j].parentElement.parentElement)
-        //                 Ulparent.insertBefore(badges[j].parentElement.parentElement, badges[j+1].parentElement.parentElement)
-        //                 // badges[j].parentElement.parentElement.remove()
-        //                 // badges[j+1].parentElement.parentElement.remove()
-        //             }
-        //         } 
-        //     }
-        // });
+        $('.directions-slider').hide()
+        getActivities()
+        setInterval(function () {
+            getActivities()
+        }, 30000)
     });
+    function getActivities() {
+        $.getJSON("direccion/ajax/actividades")
+            .done(function (data) {
+                toastSuccess('Datos actualizados')
+                showActivitiesModule(data)
+                showActivitiesSlider(data)
+            }).fail(function () {
+                toastError('Ha ocurrido un error')
+            })
+    }
 
-    function orderActivities() {
+    function showActivitiesModule(data) {
+        $('.directions-module .direction').remove()
+        let cont_directions = document.querySelector('.directions-module')
+        data.forEach(direction => {
+            let parentDiv = document.createElement('div')
+            let cardDiv = document.createElement('div')
+            let rowDiv = document.createElement('div')
+            let col1Div = document.createElement('div')
+            let col2Div = document.createElement('div')
+            let ul = document.createElement('ul')
+            let img = document.createElement('img')
+            let b = document.createElement('b')
+            let br = document.createElement('br')
+            let span = document.createElement('span')
+            parentDiv.classList.add('col', 'l3', 'm6', 's12', 'direction')
+            cardDiv.classList.add('card-panel')
+            rowDiv.classList.add('row')
+            col1Div.classList.add('col', 'l3', 'm3', 's3')
+            col2Div.classList.add('col', 'l9', 'm9', 's9')
+            ul.classList.add('collapsible')
+            img.classList.add('responsive-img')
+            img.src = direction.avatar != null ? direction.avatar : 'static/images/avatar.png'
+            b.textContent = direction.name
+            span.textContent = `Titular: ${direction.titular}`
+            col1Div.append(img)
+            col2Div.append(b, br, span)
+            rowDiv.append(col1Div, col2Div)
+            cardDiv.append(rowDiv, ul)
+            parentDiv.append(cardDiv)
+            if (direction.activities != null) {
+                orderObjs(direction.activities).forEach(activity => {
+                    let li = document.createElement('li')
+                    let div = document.createElement('div')
+                    let i = document.createElement('i')
+                    let span = document.createElement('span')
+                    div.classList.add('collapsible-header')
+                    i.classList.add('material-icons')
+                    i.textContent = 'spellcheck'
+                    span.classList.add('badge', 'white-text')
+                    span.style.backgroundColor = activity.color
+                    span.textContent = activity.percent
+                    div.append(i, span)
+                    span.before(activity.name)
+                    li.append(div)
+                    ul.append(li)
+                })
+            }
+            cont_directions.append(parentDiv)
+        })
+    }
 
+    function showActivitiesSlider(data) {
+        $('.directions-slider .direction').remove()
+        data.forEach(direction => {
+            let parentDiv = document.createElement('div')
+            let rowDiv = document.createElement('div')
+            let col1Div = document.createElement('div')
+            let col2Div = document.createElement('div')
+            let img = document.createElement('img')
+            let h5 = document.createElement('h5')
+            let h6 = document.createElement('h6')
+            let ul = document.createElement('ul')
+            parentDiv.classList.add('direction')
+            rowDiv.classList.add('row')
+            col1Div.classList.add('col', 'l2', 'center-align')
+            col2Div.classList.add('col', 'l10')
+            img.classList.add('responsive-img')
+            img.src = direction.avatar != null ? direction.avatar : 'static/images/avatar.png'
+            ul.classList.add('collapsible')
+            h5.textContent = direction.name
+            h6.textContent = `Titular: ${direction.titular}`
+            col1Div.append(img)
+            col2Div.append(h5, h6)
+            rowDiv.append(col1Div, col2Div)
+            parentDiv.append(rowDiv, ul)
+            if (direction.activities != null) {
+                orderObjs(direction.activities).forEach(activity => {
+                    let li = document.createElement('li')
+                    let div = document.createElement('div')
+                    let i = document.createElement('i')
+                    let span = document.createElement('span')
+                    div.classList.add('collapsible-header')
+                    i.classList.add('material-icons')
+                    i.textContent = 'spellcheck'
+                    span.classList.add('badge', 'white-text')
+                    span.style.backgroundColor = activity.color
+                    span.textContent = activity.percent
+                    div.append(i, span)
+                    span.before(activity.name)
+                    li.append(div)
+                    ul.append(li)
+                })
+            }
+            $('.directions-slider').slick('slickAdd', parentDiv)
+        })
+    }
+
+    function orderObjs(data){
+        let aux;
+        for (let i = 0; i < data.length-1; i++) {
+            for (let j = 0; j < data.length-1; j++) {
+                if (data[j].percent > data[j+1].percent){
+                    aux = data[j]
+                    data[j] = data[j+1]
+                    data[j+1] = aux
+                }
+            }
+        }
+        return data
     }
 </script>
 {% endblock %}

@@ -1,8 +1,10 @@
+import os
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login as auth_login , authenticate, logout
 from django.contrib import messages
+from django.db.models import Count
 from .models import Usuarios, Actividades, Objetivos, Direcciones, Evidencias, getPercentActivity, getLightActivity
 from .forms import fRegistroUsuariosDir
 
@@ -136,6 +138,35 @@ def vEliminarActividades(request, id):
         messages.success(request, 'Actividad eliminada exitosamente')
     return redirect('direccion:prinDirect')
 
+def vObtenerActividades(request):
+    if request.is_ajax():
+        direcciones = Direcciones.objects.all()
+        data_dir = []
+        for direccion in direcciones:
+            data_dir.append({
+                'name': direccion.nombre,
+                'titular': direccion.titular.get_full_name(),
+                'avatar': direccion.titular.avatar.url if direccion.titular.avatar else None,
+                'activities': getJsonAct(direccion.actividades.all())
+            })
+        print(data_dir)
+        return  JsonResponse(data_dir, safe = False)
+    else:
+        return HttpResponse('maaaaall no lo soy')
+
+def getJsonAct(activities):
+    data = []
+    if len(activities) > 0:
+        for act in activities:
+            data.append({
+                'name': act.nombre,
+                'percent': act.get_porcent(),
+                'color': act.get_light()
+            })
+    else:
+        data = None
+    return data
+
 #---Objetivos
 @login_required
 def vEliminarObjetivo(request, id):
@@ -231,12 +262,54 @@ def vEditarCheckObjetivo(request):
             }          
     return JsonResponse(info, safe = False)
 
+#---Evidencias
+def vAgregarEvidencias(request):
+    if request.method == 'POST':
+        evidencias = request.FILES.getlist('evidencias')
+        id_act = request.POST.get('actividad')
+        try:
+            actividad = Actividades.objects.get(id = id_act)
+            if len(evidencias) > 1:
+                msj = 'Evidencias agregadas exitosamente'
+            elif len(evidencias) == 1:
+                msj = 'Evidencia agrega exitosamente'
+            for evidencia in evidencias:
+                Evidencias.objects.create(evidencia = evidencia, nombre = evidencia.name, actividad = actividad)
+            messages.success(request, msj)
+            return redirect('direccion:prinDirect')
+        except Exception as identifier:
+            print(identifier)
+            messages.error(request, 'Al parecer algo salió mal. Intente de nuevo')
+            return redirect('direccion:prinDirect')
+    else:
+        messages.error(request, 'Al parecer algo salió mal. Intente de nuevo')
+        return redirect('direccion:prinDirect')
+
+def vEliminarEvidencias(request, id):
+    if request.method == 'GET':
+        try:
+            evidencia = Evidencias.objects.get(id = id)
+            deleteFile(evidencia.evidencia.path)
+            evidencia.delete()
+            messages.success(request, 'Evidencia eliminada existosamente')
+            return redirect('direccion:prinDirect')
+        except Exception as identifier:
+            print(identifier)
+            messages.error(request, 'Al parecer algo salió mal. Intente de nuevo')
+            return redirect('direccion:prinDirect')
+    else:
+        messages.error(request, 'Al parecer algo salió mal. Intente de nuevo')
+        return redirect('direccion:prinDirect')
+        
 #Extra functions
 def trueOrFalse(text):
     if text == 'true' or text == 'True':
         return True
     return False
 
+def deleteFile(path):
+    if os.path.isfile(path):
+        os.remove(path)
 
 
 

@@ -54,6 +54,21 @@ $(function () {
             }
         })
     })
+    $('.del-file').on('click', function (e) {
+        e.preventDefault()
+        Swal.fire({
+            title: '¿Está seguro(a) de eliminar esta evidencia?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí'
+        }).then((result) => {
+            if (result.value) {
+                location.href = $(this).attr('href')
+            }
+        })
+    })
     $('.edit-act').on('click', function (e) {
         e.preventDefault()
         let span = $(this).closest('li').find('.collapsible-header > span.act-name')

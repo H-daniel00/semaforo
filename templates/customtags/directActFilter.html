@@ -14,7 +14,7 @@
             <h6>Titular: {{direct.titular.first_name}}</h6>
         </div>
     </div>
-    <ul class="collapsible">
+    <ul class="collapsible popout">
         {% for act in activities %}
         {% if act.usuario.is_secretary %}
         <li>
@@ -54,11 +54,39 @@
                 <div class="act-evidencias">
                     <br>
                     <h5 class="center-align">Evidencias</h5>
-                    {% if act.evidencias.count > 0 %}
-                    <a class="btn vino right" href="{% url 'direccion:desEvidencias' act.id %}"><i
-                            class="material-icons left">file_download</i>zip</a>
-                    {% endif %}
-                    <br>
+                    <div class="row right-align">
+                        {% if act.evidencias.count > 0 %}
+                        <a class="btn blue" href="{% url 'direccion:desEvidencias' act.id %}"><i
+                                class="material-icons left">file_download</i>zip</a>
+                        {% endif %}
+                        <a class="btn blue add-saved-files"><i class="material-icons">add</i></a>
+                    </div>
+                    <div class="cont-file" style="display:none;">
+                        <form action="{% url 'direccion:rEvidencia' %}" method="post" style=""
+                            enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col l8 offset-l2 m12 s12">
+                                    <input type="hidden" name="actividad" value="{{act.id}}">
+                                    <div class="file-field input-field">
+                                        <div class="btn vino">
+                                            <span>Seleccionar</span>
+                                            <input type="file" name="evidencias" id="evidencias" multiple>
+                                        </div>
+                                        <div class="file-path-wrapper">
+                                            <input class="file-path" type="text">
+                                            <span class="helper-text">5 MB es el peso límite por archivo</span>
+                                        </div>
+                                    </div>
+                                    <ul class="collection"></ul>
+                                    <div class="row right-align">
+                                        <button class="btn-small green"><i class="material-icons">check</i></button>
+                                        <a class="btn-small red del-new-files"><i class="material-icons">clear</i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                     <table>
                         <thead>
                             <tr>
@@ -71,6 +99,8 @@
                             <tr>
                                 <td>{{evi.nombre}}</td>
                                 <td class="center-align">
+                                    <a class="btn-small red del-file" href="{% url 'direccion:eEvidencia' evi.id %}"><i
+                                            class="material-icons">delete</i></a>
                                     <a class="btn-small blue" href="{% get_media_prefix %}{{evi.evidencia}}" download>
                                         <i class="material-icons">file_download</i>
                                     </a>
@@ -142,10 +172,12 @@
                         <a class="btn blue add-saved-files"><i class="material-icons">add</i></a>
                     </div>
                     <div class="cont-file" style="display:none;">
-                        <form action="" method="post" style="">
+                        <form action="{% url 'direccion:rEvidencia' %}" method="post" style=""
+                            enctype="multipart/form-data">
+                            {% csrf_token %}
                             <div class="row">
                                 <div class="col l8 offset-l2 m12 s12">
-                                    <input type="hidden" name="direccion" value="{{act.id}}">
+                                    <input type="hidden" name="actividad" value="{{act.id}}">
                                     <div class="file-field input-field">
                                         <div class="btn vino">
                                             <span>Seleccionar</span>
@@ -158,7 +190,7 @@
                                     </div>
                                     <ul class="collection"></ul>
                                     <div class="row right-align">
-                                        <a class="btn-small green"><i class="material-icons">check</i></a>
+                                        <button class="btn-small green"><i class="material-icons">check</i></button>
                                         <a class="btn-small red del-new-files"><i class="material-icons">clear</i></a>
                                     </div>
                                 </div>
@@ -177,6 +209,8 @@
                             <tr>
                                 <td>{{evi.nombre}}</td>
                                 <td class="center-align">
+                                    <a class="btn-small red del-file" href="{% url 'direccion:eEvidencia' evi.id %}"><i
+                                            class="material-icons">delete</i></a>
                                     <a class="btn-small blue" href="{% get_media_prefix %}{{evi.evidencia}}" download>
                                         <i class="material-icons">file_download</i>
                                     </a>
