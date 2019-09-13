@@ -16,7 +16,7 @@
     </div>
     <ul class="collapsible popout">
         {% for act in activities %}
-        {% if act.usuario.is_secretary %}
+        {% if act.usuario.is_secretary or act.is_uati %}
         <li>
             <div class="collapsible-header"><i class="material-icons">spellcheck</i><span
                     class="act-name">{{act.nombre}}</span><span class="badge white-text"

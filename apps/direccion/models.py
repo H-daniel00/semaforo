@@ -8,12 +8,23 @@ class Direcciones(models.Model):
     def __str__(self):
         return '{}'.format(self.nombre)
 
+class Permisos(models.Model):
+    nombre = models.CharField(max_length = 50)
+    codename = models.CharField(max_length = 10)
+
 class Usuarios(AbstractUser):
     direccion = models.ForeignKey(Direcciones, null = True, blank = True, on_delete = models.PROTECT)
     avatar = models.ImageField(upload_to = 'avatar/', null = True, blank = True)
+    permisos = models.ManyToManyField(Permisos, related_name = 'permisos')    
 
     def is_secretary(self):
         if self.direccion.codename == 'sg':
+            return True
+        else:
+            return False
+
+    def is_uati(self):
+        if self.direccion.codename == 'uati':
             return True
         else:
             return False
@@ -48,6 +59,10 @@ class Objetivos(models.Model):
     nombre = models.CharField(max_length = 200)
     is_done = models.BooleanField(default = False)
     actividad = models.ForeignKey(Actividades, null = True, blank = True, related_name = 'objetivos' , on_delete = models.CASCADE)
+
+class Permisos(models.Model):
+    nombre = models.CharField(max_length = 50)
+    codename = models.CharField(max_length = 10)
 
 def getPercentActivity(num, total):
     try:

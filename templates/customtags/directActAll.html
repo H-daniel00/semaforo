@@ -15,7 +15,7 @@
 </div>
 <ul class="collapsible popout">
     {% for act in direct.actividades.all %}
-    {% if not act.usuario.is_secretary %}
+    {% if act.usuario.is_secretary %}
     <li>
         <div class="collapsible-header"><i class="material-icons">spellcheck</i>{{act.nombre}} <span
                 class="badge white-text" style="background-color: {{act.get_light}}">{{act.get_porcent}}%</span></div>
