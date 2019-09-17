@@ -1,0 +1,228 @@
+{% load static %}
+<div class="row">
+    <br>
+    <div class="row">
+        <div class="col l2 center-align">
+            {% if direct.titular.avatar %}
+            <img src="{% get_media_prefix %}{{direct.titular.avatar}}" alt="" class="responsive-img">
+            {% else %}
+            <img src="{% static 'images/avatar.png' %}" alt="" class="avatar-filter responsive-img">
+            {% endif %}
+        </div>
+        <div class="col l10">
+            <h5>{{direct.nombre}}</h5>
+            <h6>Titular: {{direct.titular.first_name}}</h6>
+        </div>
+    </div>
+    <ul class="collapsible popout">
+        {% for act in activities %}
+        {% if act.usuario.is_secretary or act.is_uati %}
+        <li>
+            <div class="collapsible-header"><i class="material-icons">spellcheck</i><span
+                    class="act-name">{{act.nombre}}</span><span class="badge white-text"
+                    style="background-color: {{act.get_light}}">{{act.get_porcent}}%</span>
+            </div>
+            <div class="collapsible-body">
+                <div class="act-objs" data-id="{{act.id}}">
+                    <h5 class="center-align">Objetivos</h5>
+                    <br>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="center-align">Nombre</th>
+                                <th class="right-align">Hecho</th>
+                                <th class="center-align">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for obj in act.objetivos.all %}
+                            <tr>
+                                <td class="">{{obj.nombre}}</td>
+                                <td>
+                                    <label class="secondary-content"><input type="checkbox" class="obj-saved"
+                                            {{ obj.is_done|yesno:"checked,," }} value="{{obj.id}}"><span></span>
+                                    </label>
+                                </td>
+                                <td class="center-align">
+                                    <span>Sin acciones</span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="act-evidencias">
+                    <br>
+                    <h5 class="center-align">Evidencias</h5>
+                    <div class="row right-align">
+                        {% if act.evidencias.count > 0 %}
+                        <a class="btn blue" href="{% url 'direccion:desEvidencias' act.id %}"><i
+                                class="material-icons left">file_download</i>zip</a>
+                        {% endif %}
+                        <a class="btn blue add-saved-files"><i class="material-icons">add</i></a>
+                    </div>
+                    <div class="cont-file" style="display:none;">
+                        <form action="{% url 'direccion:rEvidencia' %}" method="post" style=""
+                            enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col l8 offset-l2 m12 s12">
+                                    <input type="hidden" name="actividad" value="{{act.id}}">
+                                    <div class="file-field input-field">
+                                        <div class="btn vino">
+                                            <span>Seleccionar</span>
+                                            <input type="file" name="evidencias" id="evidencias" multiple>
+                                        </div>
+                                        <div class="file-path-wrapper">
+                                            <input class="file-path" type="text">
+                                            <span class="helper-text">5 MB es el peso límite por archivo</span>
+                                        </div>
+                                    </div>
+                                    <ul class="collection"></ul>
+                                    <div class="row right-align">
+                                        <button class="btn-small green"><i class="material-icons">check</i></button>
+                                        <a class="btn-small red del-new-files"><i class="material-icons">clear</i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="center-align">Nombre</th>
+                                <th class="center-align">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for evi in act.evidencias.all %}
+                            <tr>
+                                <td>{{evi.nombre}}</td>
+                                <td class="center-align">
+                                    <a class="btn-small red del-file" href="{% url 'direccion:eEvidencia' evi.id %}"><i
+                                            class="material-icons">delete</i></a>
+                                    <a class="btn-small blue" href="{% get_media_prefix %}{{evi.evidencia}}" download>
+                                        <i class="material-icons">file_download</i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </li>
+        {% else %}
+        <li>
+            <div class="collapsible-header"><i class="material-icons">spellcheck</i><span
+                    class="act-name">{{act.nombre}}</span><span class="badge white-text"
+                    style="background-color: {{act.get_light}}">{{act.get_porcent}}%</span>
+            </div>
+            <div class="collapsible-body">
+                <div class="row right-align">
+                    <a href="{% url 'direccion:eActividad' act.pk %}" class="btn red del-act">
+                        <i class="material-icons">delete</i>
+                    </a>
+                    <a class="btn blue edit-act" href="{% url 'direccion:edActividad' act.id %}">
+                        <i class="material-icons">edit</i>
+                    </a>
+                    <a class="btn blue add-saved-objs"><i class="material-icons">add</i></a>
+                </div>
+                <div class="act-objs" data-id="{{act.id}}">
+                    <h5 class="center-align">Objetivos</h5>
+                    <br>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="center-align">Nombre</th>
+                                <th class="right-align">Hecho</th>
+                                <th class="center-align">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for obj in act.objetivos.all %}
+                            <tr>
+                                <td class="">{{obj.nombre}}</td>
+                                <td>
+                                    <label class="secondary-content"><input type="checkbox" class="obj-saved"
+                                            {{ obj.is_done|yesno:"checked,," }} value="{{obj.id}}"><span></span>
+                                    </label>
+                                </td>
+                                <td class="center-align">
+                                    <a class="btn-small red del-obj" href="{% url 'direccion:eObjetivo' obj.id %}">
+                                        <i class="material-icons">delete</i>
+                                    </a>
+                                    <a class="btn-small blue edit-obj" href="{% url 'direccion:edObjetivo' obj.id %}">
+                                        <i class="material-icons">edit</i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="act-evidencias">
+                    <br>
+                    <h5 class="center-align">Evidencias</h5>
+                    <div class="row right-align">
+                        {% if act.evidencias.count > 0 %}
+                        <a class="btn blue" href="{% url 'direccion:desEvidencias' act.id %}"><i
+                                class="material-icons left">file_download</i>zip</a>
+                        {% endif %}
+                        <a class="btn blue add-saved-files"><i class="material-icons">add</i></a>
+                    </div>
+                    <div class="cont-file" style="display:none;">
+                        <form action="{% url 'direccion:rEvidencia' %}" method="post" style=""
+                            enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col l8 offset-l2 m12 s12">
+                                    <input type="hidden" name="actividad" value="{{act.id}}">
+                                    <div class="file-field input-field">
+                                        <div class="btn vino">
+                                            <span>Seleccionar</span>
+                                            <input type="file" name="evidencias" id="evidencias" multiple>
+                                        </div>
+                                        <div class="file-path-wrapper">
+                                            <input class="file-path" type="text">
+                                            <span class="helper-text">5 MB es el peso límite por archivo</span>
+                                        </div>
+                                    </div>
+                                    <ul class="collection"></ul>
+                                    <div class="row right-align">
+                                        <button class="btn-small green"><i class="material-icons">check</i></button>
+                                        <a class="btn-small red del-new-files"><i class="material-icons">clear</i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="center-align">Nombre</th>
+                                <th class="center-align">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for evi in act.evidencias.all %}
+                            <tr>
+                                <td>{{evi.nombre}}</td>
+                                <td class="center-align">
+                                    <a class="btn-small red del-file" href="{% url 'direccion:eEvidencia' evi.id %}"><i
+                                            class="material-icons">delete</i></a>
+                                    <a class="btn-small blue" href="{% get_media_prefix %}{{evi.evidencia}}" download>
+                                        <i class="material-icons">file_download</i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+</div>

@@ -1,3 +1,8 @@
 .brand-logo{
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
+
+.card-panel{
+    height: calc(50vh - 1.5rem);
+    margin: .5rem 0 .3rem 0;
+}

@@ -1,0 +1,6 @@
+<select name="direccion" id="id_direccion">
+    {% for dir in dirAll %}
+    <option value="{{dir.id}}">{{dir.nombre}}</option>
+    {% endfor %}
+</select>
+<label for="id_direccion">Seleccione una dirección</label>

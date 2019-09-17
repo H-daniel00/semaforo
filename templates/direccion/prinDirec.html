@@ -1,4 +1,5 @@
 {% extends 'base/base.html' %}
+{% load customtags %}
 {% block title %}Semáforo de actividades | {{user.direccion}} {% endblock %}
 {% block extrastyles %}
 a.btn-floating{
@@ -28,67 +29,14 @@ color: #892541;
 <div class="container">
     <br>
     <br>
+    <h4 class="center-align title-direc">{{user.direccion.nombre}}</h4>
     <br>
-    <!-- Show activities -->
-    <div class="row">
-        <div class="col l10 offset-l1 s12 m12">
-            <h4 class="center-align title-direc">{{user.direccion.nombre}}</h4>
-            <br>
-            <h5 class="center-align">Actividades</h5>
-            <ul class="collapsible">
-                {% for act in user.direccion.actividades.all %}
-                <li>
-                    <div class="collapsible-header"><i class="material-icons">spellcheck</i>{{act.nombre}} <span
-                            class="badge white-text"
-                            style="background-color: {{act.get_light}}">{{act.get_porcent}}%</span></div>
-                    <div class="collapsible-body">
-                        <div class="row right-align">
-                            <a href="{% url 'direccion:eActividad' act.pk %}" class="btn red del-obj">
-                                <i class="material-icons">delete</i>
-                            </a>
-                            <a class="btn blue edit-obj">
-                                <i class="material-icons">edit</i>
-                            </a>
-                        </div>
-                        <div class="act-objs">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th class="center-align">Nombre</th>
-                                        <th class="right-align">Hecho</th>
-                                        <th class="center-align">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <h5 class="center-align">Objetivos</h5>
-                                    <br>
-                                    {% for obj in act.objetivos.all %}
-                                    <tr>
-                                        <td class="">{{obj.nombre}}</td>
-                                        <td>
-                                            <label class="secondary-content"><input type="checkbox" class="obj-saved"
-                                                    {{ obj.is_done|yesno:"checked,," }} value="{{obj.id}}"><span></span>
-                                            </label>
-                                        </td>
-                                        <td class="center-align">
-                                            <a class="btn-small red del-obj">
-                                                <i class="material-icons">delete</i>
-                                            </a>
-                                            <a class="btn-small blue edit-obj">
-                                                <i class="material-icons">edit</i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
+    <br>
+    {% if user.is_secretary or user.is_uati %}
+    {% showAllDirecActivities %}
+    {% else %}
+    {% showFilterDirectActivities user %}
+    {% endif %}
     <!-- Button new activity -->
     <div class="fixed-action-btn">
         <a class="btn-floating btn-large waves-effect waves-light modal-trigger" href="#act-modal"><i
@@ -101,20 +49,19 @@ color: #892541;
             <div class="divider"></div>
             <div class="row">
                 <div class="col l10 offset-l1">
-                    <form action="{% url 'direccion:rActividad' %}" method="post" id="act-form">
+                    <form action="{% url 'direccion:rActividad' %}" method="post" id="act-form"
+                        enctype="multipart/form-data">
                         {% csrf_token %}
                         <br>
                         <div class="input-field">
                             <input type="text" name="act-name" id="act-name">
                             <label for="act-name">Nombre</label>
-                            {% if user.is_secretary %}
-                            <select name="" id="">
-                                <option value="">fdfs</option>
-                                <option value="">dsfdsf</option>
-                                <option value="">rerw</option>
-                            </select>
-                            {% endif %}
                         </div>
+                        {% if user.is_secretary or user.is_uati %}
+                        <div class="input-field">
+                            {% selectDirectFilter %}
+                        </div>
+                        {% endif %}
                         <br>
                         <h5 class="center-align">Objetivos</h5>
                         <a class="btn right vino" id="add-objs"><i class="material-icons">add</i></a>
@@ -132,6 +79,20 @@ color: #892541;
                                 </tbody>
                             </table>
                         </div>
+                        <br><br>
+                        <h5 class="center-align">Evidencias</h5>
+                        <div class="file-field input-field">
+                            <div class="btn vino">
+                                <span>Seleccionar</span>
+                                <input type="file" name="evidencias" id="evidencias" multiple>
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path" type="text">
+                                <span class="helper-text">5 MB es el peso límite por archivo</span>
+                            </div>
+                        </div>
+                        <ul class="collection" id="files">
+                        </ul>
                     </form>
                 </div>
             </div>
@@ -145,13 +106,14 @@ color: #892541;
 {% block extrafunctions %}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        formActivity()
         var modal = document.querySelectorAll('.modal');
         var modal_instances = M.Modal.init(modal);
         var collapsible = document.querySelectorAll('.collapsible');
         var collapsible_instances = M.Collapsible.init(collapsible);
         var elems = document.querySelectorAll('.sidenav');
         var instances = M.Sidenav.init(elems);
-        var select = document.querySelectorAll('select');
+        var select = document.querySelectorAll('#id_direccion');
         var select_instances = M.FormSelect.init(select);
     });
 </script>

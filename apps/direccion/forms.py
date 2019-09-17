@@ -9,7 +9,7 @@ class fRegistroDirecciones(forms.ModelForm):
 class fRegistroUsuariosDir(forms.ModelForm):
     class Meta:
         model = Usuarios
-        fields = ['username', 'password', 'first_name', 'direccion', 'avatar']
+        fields = ['username', 'password', 'first_name', 'last_name', 'direccion', 'avatar']
         widgets = {
             'password' : forms.PasswordInput(render_value = True),
         }

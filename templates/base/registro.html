@@ -1,4 +1,5 @@
 {% extends 'base/base.html' %}
+{% load customtags %}
 {% load static %}
 {% block title %}Semáforo de actividades | Registro{% endblock %}
 {% block extrastyles %}
@@ -39,31 +40,31 @@ width : 100%;
                     <img src="{% static 'images/avatar.png' %}" alt="" id="avatar" class="avatar-filter responsive-img">
                 </div>
                 <div class="col l7 m12 s12">
-                    <form action="" method="post" enctype="multipart/form-data">
+                    <form action="" id="formUser" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="input-field">
-                            <select name="direccion" id="id_direccion">
-                                <option value="" selected="">---------</option>
-                                {% for dir in direcciones %}
-                                <option value="{{dir.id}}">{{dir.nombre}}</option>
-                                {% endfor %}
-                            </select>
-                            <label for="id_">Seleccione una dirección</label>
-                            <span class="helper-text" data-error="wrong" data-success="right">Si no encuentra la
-                                dirección a la que pertenece, posiblemente alguien más la esté utlizando.</span>
+                            {% selectDirectAll %}
                         </div>
-                        <div class="input-field">
-                            {{fUsuario.first_name}}
-                            <label for="id_first_name">Ingrese su nombre</label>
+                        <div class="row">
+                            <div class="col l6 m12 s12">
+                                <div class="input-field">
+                                    {{fUsuario.first_name}}
+                                    <label for="id_first_name">Ingrese su nombre</label>
+                                </div>
+                            </div>
+                            <div class="col l6 m12 s12">
+                                <div class="input-field">
+                                    {{fUsuario.last_name}}
+                                    <label for="id_last_name">Ingrese su apellido</label>
+                                </div>
+                            </div>
                         </div>
                         <div class="input-field">
                             {{fUsuario.username}}
                             <label for="id_username">Ingrese nombre de usuario</label>
-                            <!-- <span class="helper-text" data-error="wrong" data-success="right">Será utilizado para la autenticación en el inicio de sesión.</span> -->
                         </div>
                         <div class="input-field">
                             {{fUsuario.password}}
-                            <!-- <span class="helper-text" data-error="wrong" data-success="right">Será utilizado para la autenticación en el inicio de sesión.</span> -->
                             <label for="id_password">Ingrese contraseña</label>
                         </div>
                         <div class="file-field input-field">
@@ -78,7 +79,7 @@ width : 100%;
                         <br>
                         <div class="row">
                             <div class="col l6 m6 s12">
-                                <button class="btn vino right">Registrar</button>
+                                <button id="saveUser" class="btn vino right">Registrar</button>
                             </div>
                             <div class="col l6 m6 s12">
                                 <a href="{% url 'direccion:login' %}" class="btn grey">Volver</a>
@@ -97,6 +98,7 @@ width : 100%;
         var elems = document.querySelectorAll('select');
         var instances = M.FormSelect.init(elems);
         registerUser()
+        formRegisUser()
     });
 </script>
 {% endblock %}

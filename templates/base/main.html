@@ -1,86 +1,182 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% block extrarlink %}
+<link rel="stylesheet" type="text/css" href="{% static 'slick/slick.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'slick/slick-theme.css' %}" />
+{% endblock %}
 {% block title %}Semáforo de actividades{% endblock %}
 {% block extrastyles %}
+.container{
+width: 100% !important;
+margin-top: 5%;
+}
 span.badge {
 min-width: 4rem;
 }
-.title-act{
-color: #892541;
+.vino{
+background-color: #C73C63;
 }
-.avatar-filter{
-filter: opacity(0.2);
+.direction{
+padding: 10px;
+}
+ul.collapsible{
+    overflow-y: scroll;
+    max-height: 54%;
 }
 {% endblock %}
 {% block navbar %}
 {% endblock %}
 {% block maincontent %}
+<button class="btn viewSlide"><i class="material-icons">view_carousel</i></button>
+<button class="btn viewModule"><i class="material-icons">view_module</i></button>
 <div class="container">
-    <br>
-    <br>
-    <br>
-    <div class="row">
-        <div class="col l10 offset-l1 s12 m12">
-            <h4 class="center-align title-act">Actividades</h4>
-            <br><br>
-            {% for direc in direcciones %}
-            <div class="row">
-                <div class="col l3 center-align">
-                    {% if direc.titular.avatar %}
-                    <img src="{% get_media_prefix %}{{direc.titular.avatar}}" alt="" class="responsive-img">
-                    {% else %}
-                    <img src="{% static 'images/avatar.png' %}" alt="" class="avatar-filter responsive-img">
-                    {% endif %}
-                </div>
-                <div class="col l9">
-                    <h5>{{direc.nombre}}</h5>
-                    <h6>Titular: {{direc.titular.first_name}}</h6>
-                </div>
-            </div>
-            <ul class="collapsible">
-                {% for act in direc.actividades.all %}
-                <li>
-                    <div class="collapsible-header"><i class="material-icons">spellcheck</i>{{act.nombre}} <span
-                            class="badge white-text"
-                            style="background-color: {{act.get_light}}">{{act.get_porcent}}%</span></div>
-                    <div class="collapsible-body">
-                        <div class="act-objs">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th class="center-align">Nombre</th>
-                                        <th class="center-align">Hecho</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <h5 class="center-align">Objetivos</h5>
-                                    <br>
-                                    {% for obj in act.objetivos.all %}
-                                    <tr>
-                                        <td class="">{{obj.nombre}}</td>
-                                        <td class="center-align">
-                                            <span>{{ obj.is_done|yesno:"Sí,No,No" }}</span>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </li>
-                {% endfor %}
-            </ul>
-            <br><br><br>
-            {% endfor %}
-        </div>
-    </div>
+    <div class="directions-slider"></div>
+    <div class="directions-module row"></div>
 </div>
 {% endblock %}
 {% block extrafunctions %}
+<script type="text/javascript" src="{% static 'slick/slick.js' %}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        var collapsible = document.querySelectorAll('.collapsible');
-        var collapsible_instances = M.Collapsible.init(collapsible);
+        document.querySelector('.viewSlide').addEventListener('click', function(){
+            $('.directions-slider').show()
+            $('.directions-module').hide()      
+        })
+        document.querySelector('.viewModule').addEventListener('click', function(){
+            $('.directions-slider').hide()
+            $('.directions-module').show()
+        })
+        $('.directions-slider').slick({
+            slidesToShow: 2,
+            autoplay: true,
+            autoplaySpeed: 1000
+        });
+        $('.directions-slider').hide()
+        getActivities()
+        setInterval(function () {
+            getActivities()
+        }, 30000)
     });
+    function getActivities() {
+        $.getJSON("direccion/ajax/actividades")
+            .done(function (data) {
+                toastSuccess('Datos actualizados')
+                showActivitiesModule(data)
+                showActivitiesSlider(data)
+            }).fail(function () {
+                toastError('Ha ocurrido un error')
+            })
+    }
+
+    function showActivitiesModule(data) {
+        $('.directions-module .direction').remove()
+        let cont_directions = document.querySelector('.directions-module')
+        data.forEach(direction => {
+            let parentDiv = document.createElement('div')
+            let cardDiv = document.createElement('div')
+            let rowDiv = document.createElement('div')
+            let col1Div = document.createElement('div')
+            let col2Div = document.createElement('div')
+            let ul = document.createElement('ul')
+            let img = document.createElement('img')
+            let b = document.createElement('b')
+            let br = document.createElement('br')
+            let span = document.createElement('span')
+            parentDiv.classList.add('col', 'l3', 'm6', 's12', 'direction')
+            cardDiv.classList.add('card-panel')
+            rowDiv.classList.add('row')
+            col1Div.classList.add('col', 'l3', 'm3', 's3')
+            col2Div.classList.add('col', 'l9', 'm9', 's9')
+            ul.classList.add('collapsible')
+            img.classList.add('responsive-img')
+            img.src = direction.avatar != null ? direction.avatar : 'static/images/avatar.png'
+            b.textContent = direction.name
+            span.textContent = `Titular: ${direction.titular}`
+            col1Div.append(img)
+            col2Div.append(b, br, span)
+            rowDiv.append(col1Div, col2Div)
+            cardDiv.append(rowDiv, ul)
+            parentDiv.append(cardDiv)
+            if (direction.activities != null) {
+                orderObjs(direction.activities).forEach(activity => {
+                    let li = document.createElement('li')
+                    let div = document.createElement('div')
+                    let i = document.createElement('i')
+                    let span = document.createElement('span')
+                    div.classList.add('collapsible-header')
+                    i.classList.add('material-icons')
+                    i.textContent = 'spellcheck'
+                    span.classList.add('badge', 'white-text')
+                    span.style.backgroundColor = activity.color
+                    span.textContent = activity.percent
+                    div.append(i, span)
+                    span.before(activity.name)
+                    li.append(div)
+                    ul.append(li)
+                })
+            }
+            cont_directions.append(parentDiv)
+        })
+    }
+
+    function showActivitiesSlider(data) {
+        $('.directions-slider .direction').remove()
+        data.forEach(direction => {
+            let parentDiv = document.createElement('div')
+            let rowDiv = document.createElement('div')
+            let col1Div = document.createElement('div')
+            let col2Div = document.createElement('div')
+            let img = document.createElement('img')
+            let h5 = document.createElement('h5')
+            let h6 = document.createElement('h6')
+            let ul = document.createElement('ul')
+            parentDiv.classList.add('direction')
+            rowDiv.classList.add('row')
+            col1Div.classList.add('col', 'l2', 'center-align')
+            col2Div.classList.add('col', 'l10')
+            img.classList.add('responsive-img')
+            img.src = direction.avatar != null ? direction.avatar : 'static/images/avatar.png'
+            ul.classList.add('collapsible')
+            h5.textContent = direction.name
+            h6.textContent = `Titular: ${direction.titular}`
+            col1Div.append(img)
+            col2Div.append(h5, h6)
+            rowDiv.append(col1Div, col2Div)
+            parentDiv.append(rowDiv, ul)
+            if (direction.activities != null) {
+                orderObjs(direction.activities).forEach(activity => {
+                    let li = document.createElement('li')
+                    let div = document.createElement('div')
+                    let i = document.createElement('i')
+                    let span = document.createElement('span')
+                    div.classList.add('collapsible-header')
+                    i.classList.add('material-icons')
+                    i.textContent = 'spellcheck'
+                    span.classList.add('badge', 'white-text')
+                    span.style.backgroundColor = activity.color
+                    span.textContent = activity.percent
+                    div.append(i, span)
+                    span.before(activity.name)
+                    li.append(div)
+                    ul.append(li)
+                })
+            }
+            $('.directions-slider').slick('slickAdd', parentDiv)
+        })
+    }
+
+    function orderObjs(data){
+        let aux;
+        for (let i = 0; i < data.length-1; i++) {
+            for (let j = 0; j < data.length-1; j++) {
+                if (data[j].percent > data[j+1].percent){
+                    aux = data[j]
+                    data[j] = data[j+1]
+                    data[j+1] = aux
+                }
+            }
+        }
+        return data
+    }
 </script>
 {% endblock %}
