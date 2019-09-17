@@ -1,0 +1,17 @@
+<form action="{% url 'admin:rDireccion' %}" method="post">
+    {% csrf_token %}
+    <div class="row">
+        <h5>Registro de direcciones</h5>
+        <div class="col l12">
+            <div class="input-field">
+                {{fDireccion.nombre}}
+                <label for="id_nombre">Nombre</label>
+            </div>
+            <div class="input-field">
+                {{fDireccion.codename}}
+                <label for="id_password">Codename</label>
+            </div>
+        </div>
+        <button type="submit" class="btn">Guardar</button>
+    </div>
+</form>

@@ -60,10 +60,6 @@ class Objetivos(models.Model):
     is_done = models.BooleanField(default = False)
     actividad = models.ForeignKey(Actividades, null = True, blank = True, related_name = 'objetivos' , on_delete = models.CASCADE)
 
-class Permisos(models.Model):
-    nombre = models.CharField(max_length = 50)
-    codename = models.CharField(max_length = 10)
-
 def getPercentActivity(num, total):
     try:
         percent = (100 * num)/total

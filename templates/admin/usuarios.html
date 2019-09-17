@@ -1,0 +1,24 @@
+<form action="{% url 'admin:rUsuario' %}" method="post">
+    {% csrf_token %}
+    <div class="row">
+        <h5>Registro de usuarios</h5>
+        <div class="col l12">
+            <div class="input-field">
+                {{fUsuario.username}}
+                <label for="id_username">Usuario</label>
+            </div>
+            <div class="input-field">
+                {{fUsuario.password}}
+                <label for="id_password">Contraseña</label>
+            </div>
+            <div class="input-field">
+                {{fUsuario.first_name}}
+                <label for="id_first_name">Nombre</label>
+            </div>
+            <div class="input-field">
+                {{fUsuario.direccion}}
+            </div>
+        </div>
+        <button type="submit" class="btn">Guardar</button>
+    </div>
+</form>
