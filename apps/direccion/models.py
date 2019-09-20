@@ -4,30 +4,20 @@ from django.contrib.auth.models import AbstractUser
 class Direcciones(models.Model):
     nombre = models.CharField(max_length = 100)
     codename = models.CharField(max_length = 5)
+    see_in_select = models.BooleanField(default = True)
+    see_in_list = models.BooleanField(default = True)
     titular = models.OneToOneField('direccion.Usuarios', on_delete = models.CASCADE, null = True, blank = True)
     def __str__(self):
         return '{}'.format(self.nombre)
 
-class Permisos(models.Model):
-    nombre = models.CharField(max_length = 50)
-    codename = models.CharField(max_length = 10)
-
 class Usuarios(AbstractUser):
     direccion = models.ForeignKey(Direcciones, null = True, blank = True, on_delete = models.PROTECT)
-    avatar = models.ImageField(upload_to = 'avatar/', null = True, blank = True)
-    permisos = models.ManyToManyField(Permisos, related_name = 'permisos')    
+    avatar = models.ImageField(upload_to = 'avatar/', null = True, blank = True)    
 
-    def is_secretary(self):
-        if self.direccion.codename == 'sg':
-            return True
-        else:
-            return False
-
-    def is_uati(self):
-        if self.direccion.codename == 'uati':
-            return True
-        else:
-            return False
+class Permisos(models.Model):
+    assign_all = models.BooleanField(default = False)
+    see_all = models.BooleanField(default = False)
+    usuario = models.OneToOneField(Usuarios, blank = True, null = True, on_delete = models.CASCADE, related_name = 'permisos')
 
 class Actividades(models.Model):
     nombre = models.CharField(max_length = 200)

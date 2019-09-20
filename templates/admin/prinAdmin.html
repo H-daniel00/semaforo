@@ -20,7 +20,7 @@ color: #892541;
     <br>
     <div class="row">
         <div class="col s12 m7 l6">
-            <div class="card horizontal">
+            <div class="card horizontal animated fadeIn">
                 <div class="card-image valign-wrapper vino">
                     <i class="large material-icons white-text">person</i>
                 </div>
@@ -30,13 +30,13 @@ color: #892541;
                         <p>Administra los usuarios creados en el sistema</p>
                     </div>
                     <div class="card-action right-align">
-                        <a href="#" class="title-direc">Ir</a>
+                        <a href="{% url 'admin:prinUsuario' %}" class="title-direc">Ir</a>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col s12 m7 l6">
-            <div class="card horizontal">
+            <div class="card horizontal animated fadeIn">
                 <div class="card-image valign-wrapper vino">
                     <i class="large material-icons white-text">supervisor_account</i>
                 </div>
@@ -46,7 +46,7 @@ color: #892541;
                         <p>Administra las direcciones creadas en el sistema</p>
                     </div>
                     <div class="card-action right-align">
-                        <a href="#">Ir</a>
+                        <a href="{% url 'admin:prinDireccion' %}">Ir</a>
                     </div>
                 </div>
             </div>

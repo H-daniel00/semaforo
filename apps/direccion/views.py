@@ -140,19 +140,31 @@ def vEliminarActividades(request, id):
 
 def vObtenerActividades(request):
     if request.is_ajax():
-        direcciones = Direcciones.objects.exclude(codename = 'sg')
+        direcciones = Direcciones.objects.exclude(see_in_list = False)
         data_dir = []
         for direccion in direcciones:
             data_dir.append({
                 'name': direccion.nombre,
-                'titular': direccion.titular.get_full_name(),
-                'avatar': direccion.titular.avatar.url if direccion.titular.avatar else None,
+                'titular': getTitularName(direccion),
+                'avatar': getAvatarUrl(direccion),
                 'activities': getJsonAct(direccion.actividades.all())
             })
         print(data_dir)
         return  JsonResponse(data_dir, safe = False)
     else:
         return HttpResponse('maaaaall no lo soy')
+
+def getAvatarUrl(direction):
+    try:
+        return direction.titular.avatar.url
+    except Exception as identifier:
+        return None
+
+def getTitularName(direction):
+    try:
+        return direction.titular.get_full_name()
+    except Exception as identifier:
+        return 'No asignado'
 
 def getJsonAct(activities):
     data = []

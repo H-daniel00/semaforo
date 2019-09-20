@@ -32,8 +32,8 @@ color: #892541;
     <h4 class="center-align title-direc">{{user.direccion.nombre}}</h4>
     <br>
     <br>
-    {% if user.is_secretary or user.is_uati %}
-    {% showAllDirecActivities %}
+    {% if user.permisos.see_all %}
+    {% showAllDirecActivities user %}
     {% else %}
     {% showFilterDirectActivities user %}
     {% endif %}
@@ -57,7 +57,7 @@ color: #892541;
                             <input type="text" name="act-name" id="act-name">
                             <label for="act-name">Nombre</label>
                         </div>
-                        {% if user.is_secretary or user.is_uati %}
+                        {% if user.permisos.assign_all %}
                         <div class="input-field">
                             {% selectDirectFilter %}
                         </div>

@@ -1,14 +1,25 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import fRegistroUsuarios
+from apps.direccion.models import Usuarios, Permisos, Direcciones
 from apps.direccion.forms import fRegistroDirecciones
 
 @login_required
 def vPrinAdmin(request):
+    return render(request, 'admin/prinAdmin.html')
+
+@login_required
+def vPrinUsuario(request):
     fUsuario = fRegistroUsuarios()
+    context = {'fUsuario': fUsuario}
+    return render(request, 'admin/usuarios.html', context)
+
+@login_required
+def vPrinDireccion(request):
     fDireccion = fRegistroDirecciones()
-    context = {'fUsuario': fUsuario, 'fDireccion': fDireccion}
-    return render(request, 'admin/prinAdmin.html', context)
+    direcciones = Direcciones.objects.all()
+    context = {'fDireccion': fDireccion, 'direcciones': direcciones}
+    return render(request, 'admin/direcciones.html', context)
 
 @login_required
 def vRegistroUsuarios(request):

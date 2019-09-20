@@ -15,8 +15,7 @@
     {% block extrarlink %}
     {% endblock %}
     <style>
-        {% block extrastyles %}
-        {% endblock %}
+        {% block extrastyles %}{% endblock %}
     </style>
 </head>
 
@@ -27,11 +26,17 @@
             <a href="#" class="brand-logo center">SEDEC</a>
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
+                {% if user.is_staff %}
+                <li><a href="{% url 'admin:prinAdmin' %}">Principal</a></li>
+                {% endif %}
                 <li><a href="{% url 'direccion:logout' %}">Cerrar sesión</a></li>
             </ul>
         </div>
     </nav>
     <ul class="sidenav" id="mobile-demo">
+        {% if user.is_staff %}
+        <li><a href="{% url 'admin:prinAdmin' %}">Principal</a></li>
+        {% endif %}
         <li><a href="{% url 'direccion:logout' %}">Cerrar sesión</a></li>
     </ul>
     {% endblock %}
