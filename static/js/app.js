@@ -123,10 +123,29 @@ $(function () {
             }
         })
     })
+    $('.edit-dir').on('click', function (e) {
+        e.preventDefault()
+        alert('editando direcciónnnnn')
+    })
     $('.del-obj').on('click', function (e) {
         e.preventDefault()
         Swal.fire({
             title: '¿Está seguro(a) de eliminar este objetivo?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí'
+        }).then((result) => {
+            if (result.value) {
+                location.href = $(this).attr('href')
+            }
+        })
+    })
+    $('.del-dir').on('click', function (e) {
+        e.preventDefault()
+        Swal.fire({
+            title: '¿Está seguro(a) de eliminar esta dirección?',
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -388,6 +407,25 @@ function formActivity() {
                     formAct.submit()
                 }
             }
+        }
+    })
+}
+
+function formDirection(){
+    document.querySelector('#save-dir').addEventListener('click', function(){
+        let formDir = document.querySelector('#dir-form')
+        let name = formDir.querySelector('#id_nombre')
+        let codename = formDir.querySelector('#id_codename')
+        if (name.value.trim().length === 0){
+            toastWarning('Debe de ingresar un nombre de dirección')
+        }
+        else if (codename.value.trim().length === 0){
+            toastWarning('Debe de ingresar un codename')
+        }
+        else{
+            name.value = name.value.trim()
+            codename.value = codename.value.trim()
+            formDir.submit()
         }
     })
 }

@@ -6,6 +6,7 @@ class Direcciones(models.Model):
     codename = models.CharField(max_length = 5)
     see_in_select = models.BooleanField(default = True)
     see_in_list = models.BooleanField(default = True)
+    is_active = models.BooleanField(default = True)
     titular = models.OneToOneField('direccion.Usuarios', on_delete = models.CASCADE, null = True, blank = True)
     def __str__(self):
         return '{}'.format(self.nombre)

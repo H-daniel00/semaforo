@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import vPrinAdmin, vPrinUsuario, vPrinDireccion, vRegistroUsuarios, vRegistroDirecciones
+from .views import vPrinAdmin, vPrinUsuario, vPrinDireccion, vRegistroUsuarios, vRegistroDirecciones, vEliminarDireccion
 app_name = 'admin'
 
 urlpatterns = [
@@ -10,4 +10,5 @@ urlpatterns = [
     #Direcciones
     path('direcciones', vPrinDireccion, name = 'prinDireccion'),
     path('direccion/agregar', vRegistroDirecciones, name = 'rDireccion'),
+    path('direccion/<int:id>/eliminar', vEliminarDireccion, name = 'eDireccion'),
 ]

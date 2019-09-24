@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from .forms import fRegistroUsuarios
 from apps.direccion.models import Usuarios, Permisos, Direcciones
 from apps.direccion.forms import fRegistroDirecciones
@@ -17,7 +18,7 @@ def vPrinUsuario(request):
 @login_required
 def vPrinDireccion(request):
     fDireccion = fRegistroDirecciones()
-    direcciones = Direcciones.objects.all()
+    direcciones = Direcciones.objects.order_by('is_active')
     context = {'fDireccion': fDireccion, 'direcciones': direcciones}
     return render(request, 'admin/direcciones.html', context)
 
@@ -37,4 +38,19 @@ def vRegistroDirecciones(request):
         fDireccion = fRegistroDirecciones(request.POST)
         if fDireccion.is_valid():
             fDireccion.save()
-    return redirect('admin:prinAdmin')
+    return redirect('admin:prinDireccion')
+
+@login_required
+def vEliminarDireccion(request, id):
+    if request.method == 'GET':
+        try:
+            direccion = Direcciones.objects.get(id = id)
+            direccion.is_active = False
+            direccion.save()
+            messages.success(request, 'Dirección deshabilitada exitosamente')
+        except Exception as identifier:
+            messages.error(request,'Ha ocurrido un error. Intente de nuevo por favor')
+    else:
+        messages.error(request,'Ha ocurrido un error. Intente de nuevo por favor')
+    return redirect('admin:prinDireccion')
+            
