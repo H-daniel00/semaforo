@@ -8,6 +8,7 @@ _pycache_/
 
 # Custom ignore
 settings.py
+socket/
 
 # Distribution / packaging
 .Python
