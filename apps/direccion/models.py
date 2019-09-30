@@ -47,7 +47,7 @@ class Evidencias(models.Model):
     actividad = models.ForeignKey(Actividades, null = True, blank = True, related_name = 'evidencias' , on_delete = models.CASCADE)
 
 class Objetivos(models.Model):
-    nombre = models.CharField(max_length = 200)
+    nombre = models.CharField(max_length = 500)
     is_done = models.BooleanField(default = False)
     actividad = models.ForeignKey(Actividades, null = True, blank = True, related_name = 'objetivos' , on_delete = models.CASCADE)
 
