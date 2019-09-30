@@ -49,13 +49,13 @@ ul.collapsible{
         $('.directions-slider').slick({
             slidesToShow: 2,
             autoplay: true,
-            autoplaySpeed: 1000
+            autoplaySpeed: 10000
         });
         $('.directions-slider').hide()
         getActivities()
         setInterval(function () {
             getActivities()
-        }, 10000)
+        }, 130000)
     });
     function getActivities() {
         $.getJSON("direccion/ajax/actividades")
