@@ -21,7 +21,7 @@ class Permisos(models.Model):
     usuario = models.OneToOneField(Usuarios, blank = True, null = True, on_delete = models.CASCADE, related_name = 'permisos')
 
 class Actividades(models.Model):
-    nombre = models.CharField(max_length = 200)
+    nombre = models.CharField(max_length = 500)
     folio = models.CharField(max_length = 10, null = True, blank = True)
     timestamp = models.DateTimeField(auto_now = True)
     direccion = models.ForeignKey(Direcciones, null = True, blank = True, related_name = 'actividades' , on_delete = models.CASCADE)
