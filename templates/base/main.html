@@ -39,12 +39,13 @@ ul.collapsible{
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelector('.viewSlide').addEventListener('click', function(){
-            $('.directions-slider').show()
-            $('.directions-module').hide()      
+            $('.directions-slider').css('display', 'block')
+            $('.directions-slider').get(0).slick.setPosition();
+            $('.directions-module').css('display', 'none')      
         })
         document.querySelector('.viewModule').addEventListener('click', function(){
-            $('.directions-slider').hide()
-            $('.directions-module').show()
+            $('.directions-slider').css('display', 'none')
+            $('.directions-module').css('display', 'block')
         })
         $('.directions-slider').slick({
             slidesToShow: 2,
