@@ -23,6 +23,12 @@ min-width: 4rem;
 .title-direc{
 color: #892541;
 }
+table {
+    table-layout: fixed;
+  }
+td{
+    overflow-wrap: break-word;
+}
 {% endblock %}
 {% block direcName %}{{user.direccion.nombre}}{% endblock %}
 {% block maincontent %}
