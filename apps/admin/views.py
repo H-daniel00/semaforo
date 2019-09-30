@@ -37,7 +37,9 @@ def vRegistroDirecciones(request):
     if request.method == 'POST':
         fDireccion = fRegistroDirecciones(request.POST)
         if fDireccion.is_valid():
-            fDireccion.save()
+            direccion = fDireccion.save(commit=False)
+            direccion.is_active = True
+            direccion.save()
     return redirect('admin:prinDireccion')
 
 @login_required
