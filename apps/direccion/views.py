@@ -204,7 +204,7 @@ def vEliminarActividades(request, id):
 
 def vObtenerActividades(request):
     if request.is_ajax():
-        direcciones = Direcciones.objects.exclude(see_in_list = False)
+        direcciones = Direcciones.objects.exclude(see_in_list = False).order_by('nombre')
         data_dir = []
         for direccion in direcciones:
             data_dir.append({

@@ -1,7 +1,8 @@
 {% extends 'base/base.html' %}
 {% load static %}
+
 {% block extrastyles %}
-a > i{
+a#name-modal > i{
 color: #892541;
 }
 .title-direc{
@@ -17,6 +18,7 @@ background-color: #892541;
 background-color: #892541;
 }
 {% endblock %}
+{% block title %}Semáforo de activades | Perfil{% endblock %}
 {% block extralist %}
 <li><a href="{% url 'direccion:prinDirect' %}">Principal</a></li>
 {% endblock %}
@@ -121,11 +123,11 @@ background-color: #892541;
 {% block extrafunctions %}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        editUser()
         var modal = document.querySelectorAll('.modal');
         var modal_instances = M.Modal.init(modal);
         var elems = document.querySelectorAll('.sidenav');
         var instances = M.Sidenav.init(elems);
+        editUser()
         // var select = document.querySelectorAll('#id_direccion');
         // var select_instances = M.FormSelect.init(select);
         // var dropdown = document.querySelectorAll('.dropdown-trigger');
