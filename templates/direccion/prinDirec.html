@@ -31,6 +31,12 @@ td{
 }
 {% endblock %}
 {% block direcName %}{{user.direccion.nombre}}{% endblock %}
+{% block extralist %}
+<li><a href="{% url 'direccion:perfil' %}">Configuraciones</a></li>
+{% endblock %}
+{% block extralistmob %}
+<li><a href="{% url 'direccion:perfil' %}">Configuraciones</a></li>
+{% endblock %}
 {% block maincontent %}
 <div class="container">
     <br>
@@ -121,6 +127,8 @@ td{
         var instances = M.Sidenav.init(elems);
         var select = document.querySelectorAll('#id_direccion');
         var select_instances = M.FormSelect.init(select);
+        var dropdown = document.querySelectorAll('.dropdown-trigger');
+        var dropdown_instances = M.Dropdown.init(dropdown);
     });
 </script>
 {% endblock %}

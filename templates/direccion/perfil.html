@@ -1,0 +1,120 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block extrastyles %}
+a > i{
+color: #892541;
+}
+.title-direc{
+color: #892541;
+}
+.vino{
+background-color: #892541;
+}
+.vino:hover{
+background-color: #892541;
+}
+.vino:focus{
+background-color: #892541;
+}
+{% endblock %}
+{% block extralist %}
+<li><a href="{% url 'direccion:prinDirect' %}">Principal</a></li>
+{% endblock %}
+{% block extralistmob %}
+<li><a href="{% url 'direccion:prinDirect' %}">Principal</a></li>
+{% endblock %}
+{% block maincontent %}
+<div class="container">
+    <br><br><br>
+    <div class="row">
+        <div class="col l3 m12 s12">
+            {% if user.avatar %}
+            <img src="{% get_media_prefix %}{{user.avatar}}" alt="" class="responsive-img">
+            {% else %}
+            <img src="{% static 'images/avatar.png' %}" alt="" class="avatar-filter responsive-img">
+            {% endif %}
+            <p><a href="#avatar-modal" class="right modal-trigger"><i class="material-icons">edit</i></a></p>
+        </div>
+        <div class="col l9 m12 l12">
+            <h4 class="center-align title-direc">{{user.get_full_name}}&nbsp;<a href="#name-modal" class="modal-trigger"><i
+                        class="material-icons">edit</i></a></h4>
+            <h5 class="center-align">{{user.direccion.nombre}}</h5>
+            <div class="row">
+                <div class="col l10 offset-l1">
+                    <br>
+                    <br>
+                    <h6>Usuario asignado: <b class="title-direc">{{user.username}}</b></h6>
+                    <br>
+                    <h6>Cambiar contraseña</h6>
+                    <div class="divider"></div>
+                    <br>
+                    <div class="row">
+                        <div class="col l6">
+                            <div class="input-field">
+                                <input type="text" name="" id="">
+                                <label for="">Ingrese contraseña actual</label>
+                            </div>
+                        </div>
+                        <div class="col l6">
+                            <div class="input-field">
+                                <input type="text" name="" id="">
+                                <label for="">Ingrese nueva contraseña</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col l12">
+                                <button class="btn right vino">Cambiar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal edit avatar -->
+<div id="avatar-modal" class="modal modal-fixed-footer white">
+    <div class="modal-content">
+        <h5>IMAGEN</h5>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="waves-effect waves-light btn vino" id="save-act" href="#act-modal">Guardar</a>
+    </div>
+</div>
+<!-- Modal edit name -->
+<div id="name-modal" class="modal modal-fixed-footer white">
+    <div class="modal-content">
+        <div class="row">
+            <div class="col l6">
+                <input type="text" name="" id="">
+                <label for=""></label>
+            </div>
+            <div class="col l6">
+                <input type="text" name="" id="">
+                <label for=""></label>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="waves-effect waves-light btn vino" id="save-act" href="#act-modal">Guardar</a>
+    </div>
+</div>
+{% endblock %}
+{% block extrafunctions %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // formActivity()
+        var modal = document.querySelectorAll('.modal');
+        var modal_instances = M.Modal.init(modal);
+        // var collapsible = document.querySelectorAll('.collapsible');
+        // var collapsible_instances = M.Collapsible.init(collapsible);
+        var elems = document.querySelectorAll('.sidenav');
+        var instances = M.Sidenav.init(elems);
+        // var select = document.querySelectorAll('#id_direccion');
+        // var select_instances = M.FormSelect.init(select);
+        // var dropdown = document.querySelectorAll('.dropdown-trigger');
+        // var dropdown_instances = M.Dropdown.init(dropdown);
+    });
+</script>
+{% endblock %}

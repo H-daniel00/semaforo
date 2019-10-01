@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import (vLogin, vLogout, vPrinDirec, 
+from .views import (vLogin, vLogout, vPrinDirec, vPerfil,
                     vRegistroActividades, vEliminarActividades, vEditarActividad, vObtenerActividades,
                     vEditarCheckObjetivo, vEliminarObjetivo, vEditarObjetivo, vAgregarObjetivos,
                     vRegistroUsuarios, vAgregarEvidencias, vEliminarEvidencias,)
@@ -11,6 +11,7 @@ urlpatterns = [
     path('acceso/', vLogin, name = "login"),
     path('logout/', vLogout, name = 'logout'),
     path('registro/', vRegistroUsuarios, name = 'rUsuario'),
+    path('perfil/', vPerfil, name = 'perfil'),
     #Activities
     path('actividad/agregar', vRegistroActividades, name = 'rActividad'),
     path('actividad/<int:id>/eliminar', vEliminarActividades, name = 'eActividad'),

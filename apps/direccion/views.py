@@ -38,6 +38,10 @@ def vPrincipal(request):
     context = {'direcciones': Direcciones.objects.exclude(codename = 'sg') }
     return render(request, 'base/main.html', context)
 
+@login_required
+def vPerfil(request):
+    return render(request, 'direccion/perfil.html')
+
 def vRegistroUsuarios(request):
     if request.method == 'POST':
         fUsuario = fRegistroUsuariosDir(request.POST, request.FILES)
