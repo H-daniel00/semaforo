@@ -87,7 +87,7 @@ def vCambiarAvatar(request):
         usuario = request.user
         avatar = request.FILES.get('avatar')
         if avatar is not None:
-            if usuario.avatar is not None:
+            if usuario.avatar:
                 old_avatar = usuario.avatar.path
                 usuario.avatar = avatar
                 usuario.save()
