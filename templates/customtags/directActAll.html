@@ -26,7 +26,7 @@
             <div class="row right-align">
                 <a href="{% url 'direccion:eComentario' act.id %}"
                     class="btn blue {% if act.direccion == user.direccion %}add-comment{% else %}show-comment{% endif %}"
-                    data-comment="{% if act.comentarios %}{{act.comentarios}}{% endif %}"><i class="material-icons">comment</i></a>
+                    data-comment="{% if act.comentarios is not None %}{{act.comentarios}}{% endif %}"><i class="material-icons">comment</i></a>
                 {% if act.usuario == user %}
                 <a href="{% url 'direccion:eActividad' act.pk %}" class="btn red del-act">
                     <i class="material-icons">delete</i>
