@@ -24,6 +24,7 @@ class Actividades(models.Model):
     nombre = models.CharField(max_length = 500)
     folio = models.CharField(max_length = 10, null = True, blank = True)
     timestamp = models.DateTimeField(auto_now = True)
+    comentarios = models.CharField(max_length = 700, null = True, blank = True,  default = '')
     direccion = models.ForeignKey(Direcciones, null = True, blank = True, related_name = 'actividades' , on_delete = models.CASCADE)
     usuario = models.ForeignKey(Usuarios, blank = True, on_delete = models.CASCADE)
 

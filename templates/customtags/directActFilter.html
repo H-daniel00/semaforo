@@ -24,8 +24,11 @@
             <div class="collapsible-body">
                 <span>Creado por:
                     <b>{% if act.usuario == user %}Usted{% else %}{{act.usuario.get_full_name}}{% endif %}</b></span>
-                {% if act.usuario == user %}
                 <div class="row right-align">
+                    <a href="{% url 'direccion:eComentario' act.id %}"
+                        class="btn blue {% if act.direccion == user.direccion %}add-comment{% else %}show-comment{% endif %}"
+                        data-comment="{{act.comentarios}}"><i class="material-icons">comment</i></a>
+                    {% if act.usuario == user %}
                     <a href="{% url 'direccion:eActividad' act.pk %}" class="btn red del-act">
                         <i class="material-icons">delete</i>
                     </a>
@@ -33,8 +36,8 @@
                         <i class="material-icons">edit</i>
                     </a>
                     <a class="btn blue add-saved-objs"><i class="material-icons">add</i></a>
+                    {% endif %}
                 </div>
-                {% endif %}
                 <div class="act-objs" data-id="{{act.id}}">
                     <table>
                         <thead>

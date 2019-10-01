@@ -193,6 +193,28 @@ def vEditarActividad(request, id):
         }    
     return JsonResponse(info, safe = False)
 
+def vEditarComentario(request, id):
+    if request.is_ajax():
+        comentario = request.POST.get('comment')
+        try:
+            act = Actividades.objects.get(id = id)
+            act.comentarios = comentario
+            act.save()
+            info = {
+                'status' : 'success',
+                'text' : 'Cambios guardados exitosamente'
+            }
+        except:
+            info = {
+                'status' : 'error',
+                'text' : 'Al parecer algo salió mal. Intente de nuevo'
+            }
+    else:
+        info = {
+            'status' : 'error',
+            'text' : 'Al parecer algo salió mal. Intente de nuevo'
+        }    
+    return JsonResponse(info, safe = False)
 
 @login_required
 def vEliminarActividades(request, id):

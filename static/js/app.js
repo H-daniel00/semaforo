@@ -1,13 +1,13 @@
 $(function () {
-    $('.add-saved-files').on('click', function(){
+    $('.add-saved-files').on('click', function () {
         $(this).parent().next('.cont-file').show()
     })
-    $('.del-new-files').on('click', function(){
+    $('.del-new-files').on('click', function () {
         $(this).closest('.cont-file').hide()
     })
-    $('input[name="evidencias"]').on('change', function(e){
-        showFiles($(this),e.target.files)
-    })  
+    $('input[name="evidencias"]').on('change', function (e) {
+        showFiles($(this), e.target.files)
+    })
     $('#add-objs').on('click', function () {
         $('#act-objs > table > tbody').append('<tr><td class="center-align"><input type="text" name="obj-name"></td><td><label class="secondary-content"><input type="checkbox" class="obj-check"/><span></span></label><input type="hidden" name="obj-check" value="false"/></td><td class="center-align"><a class="btn-small red del-objs"><i class="material-icons">delete</i></a></td></tr>')
         $('.del-objs').last().on('click', function () {
@@ -160,6 +160,36 @@ $(function () {
     $('.obj-saved').on('change', function () {
         changeCheckObj($(this).val(), $(this).prop("checked"), $(this))
     })
+    $('.add-comment').on('click', function (e) {
+        e.preventDefault()
+        Swal.fire({
+            title: 'Comentarios de la actividad',
+            html: `<div class="input-field"><textarea id="txta-comment" class="materialize-textarea">${$(this).attr('data-comment')}</textarea></div>`,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Guardar'
+        }).then((result) => {
+            if (result.value) {
+                let new_comment = $('#txta-comment').val()
+                if (new_comment != $(this).attr('data-comment')) {
+                    editComment($(this).attr('href'), new_comment, $(this))
+                }
+                else {
+                    toastWarning('El comentario es el mismo, no se guardó ningún cambio')
+                }
+            }
+        })
+    })
+    $('.show-comment').on('click', function (e) {
+        e.preventDefault()
+        Swal.fire({
+            title: 'Comentarios de la actividad',
+            html: `<h6>${$(this).attr('data-comment')}</h6>`,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Cerrar'
+        })
+    })
 });
 
 function changeCheckObj(id, status_check, chck) {
@@ -191,6 +221,24 @@ function editActName(url, name, span) {
         if (result.status === 'success') {
             toastSuccess(result.text)
             span.text(name)
+        }
+        else if (result.status === 'error') {
+            toastError(result.text)
+        }
+    }).fail(function () {
+        console.log('Ha ocurrido un error inesperado :(')
+    })
+}
+
+function editComment(url, comment, element) {
+    $.ajax({
+        method: "POST",
+        url: url,
+        data: { csrfmiddlewaretoken: getCSRFTokenValue(), comment: comment }
+    }).done(function (result) {
+        if (result.status === 'success') {
+            toastSuccess(result.text)
+            $(element).attr('data-comment', comment)
         }
         else if (result.status === 'error') {
             toastError(result.text)
@@ -302,7 +350,7 @@ function registerUser() {
     });
 }
 
-function showFiles(ele, files){
+function showFiles(ele, files) {
     let ulFiles = ele.closest('.file-field').next('.collection')
     let max_size = 5242880 //5 megabytes
     ulFiles.empty()
@@ -310,7 +358,7 @@ function showFiles(ele, files){
         if (files[i].size <= max_size) {
             ulFiles.append(`<li class="collection-item">${files[i].name}</li>`)
         }
-        else{
+        else {
             ulFiles.append(`<li class="collection-item red-text">${files[i].name} - Excede el peso permitido</li>`)
             toastWarning('Archivos inválidos detectados. Por favor vuelva a elegirlos correctamente')
         }
@@ -411,18 +459,18 @@ function formActivity() {
     })
 }
 
-function formDirection(){
-    document.querySelector('#save-dir').addEventListener('click', function(){
+function formDirection() {
+    document.querySelector('#save-dir').addEventListener('click', function () {
         let formDir = document.querySelector('#dir-form')
         let name = formDir.querySelector('#id_nombre')
         let codename = formDir.querySelector('#id_codename')
-        if (name.value.trim().length === 0){
+        if (name.value.trim().length === 0) {
             toastWarning('Debe de ingresar un nombre de dirección')
         }
-        else if (codename.value.trim().length === 0){
+        else if (codename.value.trim().length === 0) {
             toastWarning('Debe de ingresar un codename')
         }
-        else{
+        else {
             name.value = name.value.trim()
             codename.value = codename.value.trim()
             formDir.submit()
@@ -430,38 +478,38 @@ function formDirection(){
     })
 }
 
-function editUser(){
-    document.querySelector('#change-avatar').addEventListener('click', function(){
+function editUser() {
+    document.querySelector('#change-avatar').addEventListener('click', function () {
         document.querySelector('#avatar-form').submit()
     })
-    document.querySelector('#edit-name-user').addEventListener('click', function(){
+    document.querySelector('#edit-name-user').addEventListener('click', function () {
         let form = document.querySelector('#name-user-form')
         let name = form.querySelector('#name')
         let last_name = form.querySelector('#last_name')
-        if (name.value.trim().length === 0){
+        if (name.value.trim().length === 0) {
             toastWarning('Debe de ingresar su nombre')
         }
-        else if (last_name.value.trim().length === 0){
+        else if (last_name.value.trim().length === 0) {
             toastWarning('Debe de ingresar su apellido')
         }
-        else{
+        else {
             name.value = name.value.trim()
             last_name.value = last_name.value.trim()
             form.submit()
         }
     })
-    document.querySelector('#change-pass').addEventListener('click', function(e){
+    document.querySelector('#change-pass').addEventListener('click', function (e) {
         e.preventDefault()
         let form = document.querySelector('#pass-form')
         let currentpass = form.querySelector('#current_pass')
         let newpass = form.querySelector('#new_pass')
-        if (currentpass.value.trim().length === 0){
+        if (currentpass.value.trim().length === 0) {
             toastWarning('Debe su contraseña actual')
         }
-        else if (newpass.value.trim().length === 0){
+        else if (newpass.value.trim().length === 0) {
             toastWarning('Debe de ingresar la nueva contraseña')
         }
-        else{
+        else {
             currentpass.value = currentpass.value.trim()
             newpass.value = newpass.value.trim()
             form.submit()

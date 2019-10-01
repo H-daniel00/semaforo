@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (vLogin, vLogout, vPrinDirec, vPerfil, vCambiarAvatar, vCambiarNombreUsuario, vCambiarPassword,
                     vRegistroActividades, vEliminarActividades, vEditarActividad, vObtenerActividades,
-                    vEditarCheckObjetivo, vEliminarObjetivo, vEditarObjetivo, vAgregarObjetivos,
+                    vEditarCheckObjetivo, vEliminarObjetivo, vEditarObjetivo, vAgregarObjetivos, vEditarComentario,
                     vRegistroUsuarios, vAgregarEvidencias, vEliminarEvidencias,)
 from .download_evidences import descargarEvidenciasZip
 app_name = 'direccion'
@@ -27,6 +27,7 @@ urlpatterns = [
     path('ajax/actividad/objetivo/<int:id>/editar', vEditarObjetivo, name = 'edObjetivo'),
     path('ajax/actividad/objetivo/agregar', vAgregarObjetivos, name = 'aObjetivo'),
     path('ajax/actividades/', vObtenerActividades, name = 'obActividades'),
+    path('ajax/actividad/<int:id>/comentarios/editar', vEditarComentario, name = 'eComentario'),
     #vERIFICAR
     path('titular/avatar/cambiar', vCambiarAvatar, name = 'eAvatar'),
     path('titular/nombre/cambiar', vCambiarNombreUsuario, name = 'eNombreUsu'),
