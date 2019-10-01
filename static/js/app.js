@@ -430,6 +430,44 @@ function formDirection(){
     })
 }
 
+function editUser(){
+    document.querySelector('#change-avatar').addEventListener('click', function(){
+        document.querySelector('#avatar-form').submit()
+    })
+    document.querySelector('#edit-name-user').addEventListener('click', function(){
+        let form = document.querySelector('#name-user-form')
+        let name = form.querySelector('#name')
+        let last_name = form.querySelector('#last_name')
+        if (name.value.trim().length === 0){
+            toastWarning('Debe de ingresar su nombre')
+        }
+        else if (last_name.value.trim().length === 0){
+            toastWarning('Debe de ingresar su apellido')
+        }
+        else{
+            name.value = name.value.trim()
+            last_name.value = last_name.value.trim()
+            form.submit()
+        }
+    })
+    document.querySelector('#change-pass').addEventListener('click', function(e){
+        e.preventDefault()
+        let form = document.querySelector('#pass-form')
+        let currentpass = form.querySelector('#current_pass')
+        let newpass = form.querySelector('#new_pass')
+        if (currentpass.value.trim().length === 0){
+            toastWarning('Debe su contraseña actual')
+        }
+        else if (newpass.value.trim().length === 0){
+            toastWarning('Debe de ingresar la nueva contraseña')
+        }
+        else{
+            currentpass.value = currentpass.value.trim()
+            newpass.value = newpass.value.trim()
+            form.submit()
+        }
+    })
+}
 
 
 

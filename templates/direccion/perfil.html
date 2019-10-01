@@ -27,88 +27,103 @@ background-color: #892541;
 <div class="container">
     <br><br><br>
     <div class="row">
-        <div class="col l3 m12 s12">
+        <div class="center-align col l4 offset-l4 m12 s12">
             {% if user.avatar %}
             <img src="{% get_media_prefix %}{{user.avatar}}" alt="" class="responsive-img">
             {% else %}
             <img src="{% static 'images/avatar.png' %}" alt="" class="avatar-filter responsive-img">
             {% endif %}
-            <p><a href="#avatar-modal" class="right modal-trigger"><i class="material-icons">edit</i></a></p>
+            <a href="#avatar-modal" class="right modal-trigger">cambiar foto</a>
         </div>
-        <div class="col l9 m12 l12">
-            <h4 class="center-align title-direc">{{user.get_full_name}}&nbsp;<a href="#name-modal" class="modal-trigger"><i
-                        class="material-icons">edit</i></a></h4>
-            <h5 class="center-align">{{user.direccion.nombre}}</h5>
-            <div class="row">
-                <div class="col l10 offset-l1">
-                    <br>
-                    <br>
-                    <h6>Usuario asignado: <b class="title-direc">{{user.username}}</b></h6>
-                    <br>
-                    <h6>Cambiar contraseña</h6>
-                    <div class="divider"></div>
-                    <br>
-                    <div class="row">
-                        <div class="col l6">
+    </div>
+    <div class="col l8 offset-l2 m12 s12">
+        <h4 class="center-align title-direc">{{user.get_full_name}}&nbsp;<a href="#name-modal" class="modal-trigger"><i
+                    class="material-icons">edit</i></a></h4>
+        <h5 class="center-align">{{user.direccion.nombre}}</h5>
+        <div class="row">
+            <div class="col l10 offset-l1 m12 s12">
+                <br>
+                <br>
+                <h6>Usuario asignado: <b class="title-direc">{{user.username}}</b></h6>
+                <br>
+                <h6>Cambiar contraseña</h6>
+                <div class="divider"></div>
+                <br>
+                <div class="row">
+                    <form action="{% url 'direccion:ePassword' %}" method="post" id="pass-form">
+                        {% csrf_token %}
+                        <div class="col l6 m12 s12">
                             <div class="input-field">
-                                <input type="text" name="" id="">
-                                <label for="">Ingrese contraseña actual</label>
+                                <input type="password" name="current_pass" id="current_pass">
+                                <label for="current_pass">Ingrese contraseña actual</label>
                             </div>
                         </div>
-                        <div class="col l6">
+                        <div class="col l6 m12 s12">
                             <div class="input-field">
-                                <input type="text" name="" id="">
-                                <label for="">Ingrese nueva contraseña</label>
+                                <input type="password" name="new_pass" id="new_pass">
+                                <label for="new_pass">Ingrese nueva contraseña</label>
                             </div>
                         </div>
+                        <p class="center-align">Al cambiar su contraseña será redireccionado al inicio de sesión</p>
                         <div class="row">
                             <div class="col l12">
-                                <button class="btn right vino">Cambiar</button>
+                                <button class="btn right vino" id="change-pass">Cambiar</button>
                             </div>
                         </div>
-                    </div>
-
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <!-- Modal edit avatar -->
-<div id="avatar-modal" class="modal modal-fixed-footer white">
+<div id="avatar-modal" class="modal white">
     <div class="modal-content">
-        <h5>IMAGEN</h5>
+        <form action="{% url 'direccion:eAvatar' %}" method="POST" id="avatar-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="file-field input-field">
+                <div class="btn vino">
+                    <span>Seleccione imagen</span>
+                    <input type="file" name="avatar">
+                </div>
+                <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text">
+                </div>
+            </div>
+        </form>
     </div>
     <div class="modal-footer">
-        <a href="#!" class="waves-effect waves-light btn vino" id="save-act" href="#act-modal">Guardar</a>
+        <button class="waves-effect waves-light btn vino" id="change-avatar">Subir</button>
     </div>
 </div>
 <!-- Modal edit name -->
-<div id="name-modal" class="modal modal-fixed-footer white">
+<div id="name-modal" class="modal white">
     <div class="modal-content">
-        <div class="row">
-            <div class="col l6">
-                <input type="text" name="" id="">
-                <label for=""></label>
+        <form action="{% url 'direccion:eNombreUsu' %}" method="post" id="name-user-form">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col l6 input-field">
+                    <input type="text" name="name" id="name" value="{{user.first_name}}">
+                    <label for="name">Ingrese su nombre</label>
+                </div>
+                <div class="col l6 input-field">
+                    <input type="text" name="last_name" id="last_name" value="{{user.last_name}}">
+                    <label for="last_name">Ingrese su apellido</label>
+                </div>
             </div>
-            <div class="col l6">
-                <input type="text" name="" id="">
-                <label for=""></label>
-            </div>
-        </div>
+        </form>
     </div>
     <div class="modal-footer">
-        <a href="#!" class="waves-effect waves-light btn vino" id="save-act" href="#act-modal">Guardar</a>
+        <button class="waves-effect waves-light btn vino" id="edit-name-user">Guardar</button>
     </div>
 </div>
 {% endblock %}
 {% block extrafunctions %}
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // formActivity()
+        editUser()
         var modal = document.querySelectorAll('.modal');
         var modal_instances = M.Modal.init(modal);
-        // var collapsible = document.querySelectorAll('.collapsible');
-        // var collapsible_instances = M.Collapsible.init(collapsible);
         var elems = document.querySelectorAll('.sidenav');
         var instances = M.Sidenav.init(elems);
         // var select = document.querySelectorAll('#id_direccion');

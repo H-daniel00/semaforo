@@ -2,7 +2,7 @@ import os
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login as auth_login , authenticate, logout
+from django.contrib.auth import login as auth_login , authenticate, logout, update_session_auth_hash
 from django.contrib import messages
 from django.db.models import Count
 from .models import Usuarios, Actividades, Objetivos, Direcciones, Evidencias, getPercentActivity, getLightActivity
@@ -79,6 +79,66 @@ def vRegistroUsuarios(request):
         fUsuario = fRegistroUsuariosDir()
         context = {'fUsuario' : fUsuario}
     return render(request, 'base/registro.html', context)
+
+# Verificar estas funciones
+@login_required
+def vCambiarAvatar(request):
+    if request.method == 'POST': 
+        usuario = request.user
+        avatar = request.FILES.get('avatar')
+        if avatar is not None:
+            if usuario.avatar is not None:
+                old_avatar = usuario.avatar.path
+                usuario.avatar = avatar
+                usuario.save()
+                try:
+                    deleteFile(old_avatar)
+                    messages.success(request, 'Avatar cambiado exitosamente')
+                except:
+                    messages.error(request, 'Ha ocurrido un error, intente de nuevo')
+            else:
+                usuario.avatar = avatar
+                usuario.save()
+                messages.success(request, 'Avatar cambiado exitosamente')
+        else:
+            messages.warning(request, 'Debe agregar una imagen')
+    else:
+        messages.error(request, 'Ha ocurrido un error, intente de nuevo')
+    return redirect('direccion:perfil')
+
+@login_required
+def vCambiarNombreUsuario(request):
+    if request.method == 'POST':
+        nombre = request.POST.get('name')
+        apellido = request.POST.get('last_name')
+        usuario = request.user
+        if len(nombre) > 0:
+            usuario.first_name = nombre
+            usuario.last_name = apellido
+            usuario.save()
+            messages.success(request, 'Nombre cambiado exitosamente')
+        else:
+            messages.error(request, 'Debe de ingresar su nombre al menos')
+    else:
+        messages.error(request, 'Ha ocurrido un error, intente de nuevo')
+    return redirect('direccion:perfil')
+
+@login_required
+def vCambiarPassword(request):
+    if request.method == 'POST':
+        current_pass = request.POST.get('current_pass')
+        new_pass = request.POST.get('new_pass')
+        if request.user.check_password(current_pass):
+            request.user.set_password(new_pass)
+            request.user.save(update_fields=['password'])
+            update_session_auth_hash(request, request.user)
+            messages.success(request, 'Contraseña cambiada exitosamente')
+        else:
+            messages.warning(request, 'La contraseña no coincide con la actual. Intente de nuevo')
+            return redirect('direccion:perfil')
+    else:
+        messages.error(request, 'Ha ocurrido un error inesperado')
+    return redirect('direccion:login')
 
 #---Actividades
 @login_required
