@@ -6,3 +6,10 @@
     height: calc(50vh - 1.5rem);
     margin: .5rem 0 .3rem 0;
 }
+
+footer{
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 3px !important;
+}

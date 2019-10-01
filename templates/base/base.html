@@ -53,6 +53,11 @@
     <script src="{% static 'js/app.js' %}"></script>
     {% include 'base/validaciones.html' %}
     {% block extrafunctions %}{% endblock %}
+    {% block powered %}
+    <footer class="center-align white">
+        <span class="grey-text lighten-2">© Powered by Unidad de Apoyo Técnico e Informático</span>
+    </footer>
+    {% endblock %}
 </body>
 
 </html>
