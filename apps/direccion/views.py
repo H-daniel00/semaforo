@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.db.models import Count
 from .models import Usuarios, Actividades, Objetivos, Direcciones, Evidencias, getPercentActivity, getLightActivity
 from .forms import fRegistroUsuariosDir
+from .validate_file import validate_file_type, validate_img_type
 
 def vLogin(request):
     if request.user.is_authenticated:
@@ -87,19 +88,22 @@ def vCambiarAvatar(request):
         usuario = request.user
         avatar = request.FILES.get('avatar')
         if avatar is not None:
-            if usuario.avatar:
-                old_avatar = usuario.avatar.path
-                usuario.avatar = avatar
-                usuario.save()
-                try:
-                    deleteFile(old_avatar)
+            if validate_img_type(avatar):
+                if usuario.avatar:
+                    old_avatar = usuario.avatar.path
+                    usuario.avatar = avatar
+                    usuario.save()
+                    try:
+                        deleteFile(old_avatar)
+                        messages.success(request, 'Avatar cambiado exitosamente')
+                    except:
+                        messages.error(request, 'Ha ocurrido un error, intente de nuevo')
+                else:
+                    usuario.avatar = avatar
+                    usuario.save()
                     messages.success(request, 'Avatar cambiado exitosamente')
-                except:
-                    messages.error(request, 'Ha ocurrido un error, intente de nuevo')
             else:
-                usuario.avatar = avatar
-                usuario.save()
-                messages.success(request, 'Avatar cambiado exitosamente')
+                messages.warning(request, 'Imagen inválida')
         else:
             messages.warning(request, 'Debe agregar una imagen')
     else:
@@ -363,17 +367,21 @@ def vEditarCheckObjetivo(request):
 #---Evidencias
 def vAgregarEvidencias(request):
     if request.method == 'POST':
+        msj = ''
         evidencias = request.FILES.getlist('evidencias')
         id_act = request.POST.get('actividad')
         try:
             actividad = Actividades.objects.get(id = id_act)
-            if len(evidencias) > 1:
-                msj = 'Evidencias agregadas exitosamente'
-            elif len(evidencias) == 1:
-                msj = 'Evidencia agrega exitosamente'
             for evidencia in evidencias:
-                Evidencias.objects.create(evidencia = evidencia, nombre = evidencia.name, actividad = actividad)
-            messages.success(request, msj)
+                if validate_file_type(evidencia):
+                    if evidencia.size <= 5242880:
+                        Evidencias.objects.create(evidencia = evidencia, nombre = evidencia.name, actividad = actividad)
+                        msj += ("<h6 class='right-align green-text'>" + evidencia.name + " se guardó correctamente" + "</h6>") 
+                    else:
+                        msj += ("<h6 class='right-align red-text'>" +evidencia.name + " excede peso permitido" + "</h6>")
+                else:
+                    msj += ("<h6 class='right-align red-text'>" +evidencia.name + " archivo inválido" + "</h6>")
+            messages.info(request, msj)
             return redirect('direccion:prinDirect')
         except Exception as identifier:
             print(identifier)

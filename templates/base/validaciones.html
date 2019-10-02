@@ -30,6 +30,16 @@
   			timer: 5000
 		});
 	}
+	function toastNormal(msj = "Desconocido"){
+		swal({
+			toast: true,
+			type: 'info',
+ 	 		html: msj,
+			position: 'top-end',
+  			showConfirmButton: true,
+  			// timer: 5000
+		});
+	}
 </script>
 
 {% if messages %}
@@ -42,6 +52,9 @@
 		{% endif %}
 		{% if message.tags == 'warning' %}
 		<script> toastWarning("{{ message|safe }}") </script>
+		{% endif %}
+		{% if message.tags == 'info' %}
+		<script> toastNormal("{{ message|safe }}") </script>
 		{% endif %}
 	{% endfor %}
 {% endif %}
