@@ -221,7 +221,7 @@ def vActividadEstatus(request, id):
         status = request.POST.get('status')
         try:
             direccion = Actividades.objects.get(id = id)
-            direccion.is_cancelled = bool(status)
+            direccion.is_cancelled = trueOrFalse(status)
             direccion.save()    
             info = {
                 'status' : 'success',
