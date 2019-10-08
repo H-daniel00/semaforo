@@ -5,9 +5,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login as auth_login , authenticate, logout, update_session_auth_hash
 from django.contrib import messages
 from django.db.models import Count
-from .models import Usuarios, Actividades, Objetivos, Direcciones, Evidencias, getPercentActivity, getLightActivity
-from .forms import fRegistroUsuariosDir
+from .models import Usuarios, Actividades, Objetivos, Direcciones, Evidencias, getPercentActivity, getLightActivity, Correos_Notificacion
+from .forms import fRegistroUsuariosDir, fCorreosNotificacion
 from .validate_file import validate_file_type, validate_img_type
+from .send_email import send_notification_mail
 
 def vLogin(request):
     if request.user.is_authenticated:
@@ -41,7 +42,8 @@ def vPrincipal(request):
 
 @login_required
 def vPerfil(request):
-    return render(request, 'direccion/perfil.html')
+    fcorreo_noti = fCorreosNotificacion()
+    return render(request, 'direccion/perfil.html', {'fcorreo_noti' : fcorreo_noti})
 
 def vRegistroUsuarios(request):
     if request.method == 'POST':
@@ -144,6 +146,22 @@ def vCambiarPassword(request):
         messages.error(request, 'Ha ocurrido un error inesperado')
     return redirect('direccion:login')
 
+@login_required
+def vCorreosNotificacion(request):
+    if request.method == 'POST':
+        usuario = request.user
+        fcorreos = fCorreosNotificacion(request.POST)
+        if fcorreos.is_valid():
+            correo = fcorreos.save(commit = False)
+            obj, created = Correos_Notificacion.objects.update_or_create(
+                usuario = usuario,
+                defaults={'correo_inst': correo.correo_inst, 'correo_per': correo.correo_per}
+            )
+            messages.success(request, 'Cambios guardados exitosamente')
+        else:
+            messages.error(request, 'No se guardó ningún cambio. Intente de nuevo')
+    return redirect('direccion:perfil')
+
 #---Actividades
 @login_required
 def vRegistroActividades(request):
@@ -168,6 +186,7 @@ def vRegistroActividades(request):
                     Objetivos.objects.create(nombre = obj, is_done = trueOrFalse(checked), actividad = activity)
             for evidencia in evidencias:
                 Evidencias.objects.create(evidencia = evidencia, nombre = evidencia.name, actividad = activity)
+            # send_notification_mail(request.user, activity.direccion.titular)
             messages.success(request, 'Actividad agregada exitosamente')
         except Exception as e:
             print(e)
@@ -195,6 +214,30 @@ def vEditarActividad(request, id):
             'status' : 'error',
             'text' : 'Al parecer algo salió mal. Intente de nuevo'
         }    
+    return JsonResponse(info, safe = False)
+
+def vActividadEstatus(request, id):
+    if request.is_ajax():
+        status = request.POST.get('status')
+        try:
+            direccion = Actividades.objects.get(id = id)
+            direccion.is_cancelled = bool(status)
+            direccion.save()    
+            info = {
+                'status' : 'success',
+                'text' : 'Cambios guardados exitosamente'
+            }
+        except Exception as e:
+            print(e)
+            info = {
+                'status' : 'error',
+                'text' : 'Al parecer algo salió mal. Intente de nuevo'
+            }
+    else:
+        info = {
+            'status' : 'error',
+            'text' : 'Al parecer algo salió mal. Intente de nuevo'
+        }
     return JsonResponse(info, safe = False)
 
 def vEditarComentario(request, id):
@@ -263,7 +306,8 @@ def getJsonAct(activities):
             data.append({
                 'name': act.nombre,
                 'percent': act.get_porcent(),
-                'color': act.get_light()
+                'color': act.get_light(),
+                'is_cancelled': act.is_cancelled
             })
     else:
         data = None

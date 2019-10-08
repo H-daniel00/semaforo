@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import (vLogin, vLogout, vPrinDirec, vPerfil, vCambiarAvatar, vCambiarNombreUsuario, vCambiarPassword,
+from .views import (vLogin, vLogout, vPrinDirec, vPerfil, vCambiarAvatar, vCambiarNombreUsuario, vCambiarPassword, vCorreosNotificacion, vActividadEstatus,
                     vRegistroActividades, vEliminarActividades, vEditarActividad, vObtenerActividades,
                     vEditarCheckObjetivo, vEliminarObjetivo, vEditarObjetivo, vAgregarObjetivos, vEditarComentario,
                     vRegistroUsuarios, vAgregarEvidencias, vEliminarEvidencias,)
@@ -28,9 +28,10 @@ urlpatterns = [
     path('ajax/actividad/objetivo/agregar', vAgregarObjetivos, name = 'aObjetivo'),
     path('ajax/actividades/', vObtenerActividades, name = 'obActividades'),
     path('ajax/actividad/<int:id>/comentarios/editar', vEditarComentario, name = 'eComentario'),
-    #vERIFICAR
+    path('ajax/actividad/<int:id>/status/editar', vActividadEstatus, name = 'edEstatusAct'),
+    #Acciones del perfil
     path('titular/avatar/cambiar', vCambiarAvatar, name = 'eAvatar'),
     path('titular/nombre/cambiar', vCambiarNombreUsuario, name = 'eNombreUsu'),
     path('titular/password/cambiar', vCambiarPassword, name = 'ePassword'),
-
+    path('titular/correos/editar', vCorreosNotificacion, name = 'edCorreoNoti'),
 ]

@@ -48,7 +48,8 @@ background-color: #892541;
                 <br>
                 <h6>Usuario asignado: <b class="title-direc">{{user.username}}</b></h6>
                 <br>
-                <h6>Cambiar contraseña</h6>
+                <br>
+                <h5>Cambiar contraseña</h5>
                 <div class="divider"></div>
                 <br>
                 <div class="row">
@@ -70,6 +71,38 @@ background-color: #892541;
                         <div class="row">
                             <div class="col l12">
                                 <button class="btn right vino" id="change-pass">Cambiar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <br>
+                <h5>Correos para notificación</h5>
+                <div class="divider"></div>
+                <br>
+                <div class="row">
+                    <form action="{% url 'direccion:edCorreoNoti' %}" method="post" id="emails-form">
+                        {% csrf_token %}
+                        <div class="col l6 m12 s12">
+                            <div class="input-field">
+                                <input type="email" name="correo_inst" maxlength="254"
+                                    value="{% if user.correos.correo_inst %}{{user.correos.correo_inst}}{% endif %}"
+                                    id="id_correo_inst">
+                                <label for="inst_email">Correo institucional</label>
+                                <span class="helper-text">Opcional</span>
+                            </div>
+                        </div>
+                        <div class="col l6 m12 s12">
+                            <div class="input-field">
+                                <input type="email" name="correo_per" maxlength="254"
+                                    value="{% if user.correos.correo_per %}{{user.correos.correo_per}}{% endif %}"
+                                    id="id_correo_per">
+                                <label for="pers_email">Correo personal</label>
+                                <span class="helper-text">Opcional</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col l12">
+                                <button class="btn right vino" id="change-email">Guardar</button>
                             </div>
                         </div>
                     </form>

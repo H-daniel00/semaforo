@@ -111,6 +111,7 @@ ul.collapsible{
                     let i = document.createElement('i')
                     let span = document.createElement('span')
                     div.classList.add('collapsible-header')
+                    if (activity.is_cancelled) div.classList.add('cancelled')
                     i.classList.add('material-icons')
                     i.textContent = 'spellcheck'
                     span.classList.add('badge', 'white-text')
@@ -157,6 +158,7 @@ ul.collapsible{
                     let i = document.createElement('i')
                     let span = document.createElement('span')
                     div.classList.add('collapsible-header')
+                    if (activity.is_cancelled) div.classList.add('cancelled')
                     i.classList.add('material-icons')
                     i.textContent = 'spellcheck'
                     span.classList.add('badge', 'white-text')

@@ -17,17 +17,30 @@
     <ul class="collapsible popout">
         {% for act in activities %}
         <li>
-            <div class="collapsible-header">
+            <div class="collapsible-header {% if act.is_cancelled %}cancelled{% endif %}">
                 <i class="material-icons">spellcheck</i><span class="act-name">{{act.nombre}}</span>
                 <span class="badge white-text" style="background-color: {{act.get_light}}">{{act.get_porcent}}%</span>
             </div>
             <div class="collapsible-body">
+                {% if act.usuario == user %}
+                <div class="row right-align">
+                    <div class="switch">
+                        <label>
+                            Cancelado
+                            <input type="checkbox" class="cancel-act" data-url="{% url 'direccion:edEstatusAct' act.id %}"
+                                {% if act.is_cancelled %}checked{% endif %}>
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+                {% endif %}
                 <span>Creado por:
                     <b>{% if act.usuario == user %}Usted{% else %}{{act.usuario.get_full_name}}{% endif %}</b></span>
                 <div class="row right-align">
                     <a href="{% url 'direccion:eComentario' act.id %}"
                         class="btn blue {% if act.direccion == user.direccion %}add-comment{% else %}show-comment{% endif %}"
-                        data-comment="{% if act.comentarios %}{{act.comentarios}}{% endif %}"><i class="material-icons">comment</i></a>
+                        data-comment="{% if act.comentarios %}{{act.comentarios}}{% endif %}"><i
+                            class="material-icons">comment</i></a>
                     {% if act.usuario == user %}
                     <a href="{% url 'direccion:eActividad' act.pk %}" class="btn red del-act">
                         <i class="material-icons">delete</i>
@@ -99,7 +112,9 @@
                                     <div class="file-field input-field">
                                         <div class="btn vino">
                                             <span>Seleccionar</span>
-                                            <input type="file" name="evidencias" id="evidencias" accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document, .xls, .xlsx, application/msexcel, application/x-msexcel, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.presentationml.presentation, .ppt, .pptx, application/vnd.ms-powerpoint, application/pdf, image/jpeg, image/png" multiple>
+                                            <input type="file" name="evidencias"
+                                                accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document, .xls, .xlsx, application/msexcel, application/x-msexcel, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.presentationml.presentation, .ppt, .pptx, application/vnd.ms-powerpoint, application/pdf, image/jpeg, image/png"
+                                                multiple>
                                         </div>
                                         <div class="file-path-wrapper">
                                             <input class="file-path" type="text">

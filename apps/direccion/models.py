@@ -26,6 +26,7 @@ class Actividades(models.Model):
     timestamp = models.DateTimeField(auto_now = True)
     comentarios = models.CharField(max_length = 700, null = True, blank = True,  default = '')
     direccion = models.ForeignKey(Direcciones, null = True, blank = True, related_name = 'actividades' , on_delete = models.CASCADE)
+    is_cancelled = models.BooleanField(default = False)    
     usuario = models.ForeignKey(Usuarios, blank = True, on_delete = models.CASCADE)
 
     def get_porcent(self):
@@ -75,3 +76,8 @@ def getLightActivity(num, total):
             return red_color
     except:
         return red_color
+
+class Correos_Notificacion(models.Model):
+    correo_inst = models.EmailField(null = True, blank = True)
+    correo_per = models.EmailField(null = True, blank = True)
+    usuario = models.OneToOneField(Usuarios, related_name = 'correos', null = True, blank = True, on_delete = models.CASCADE)

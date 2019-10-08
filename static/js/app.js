@@ -190,6 +190,9 @@ $(function () {
             confirmButtonText: 'Cerrar'
         })
     })
+    $('.cancel-act').on('click', function(){
+       changeStatusAct($(this), $(this).attr('data-url'), $(this).prop('checked'))
+    })
 });
 
 function changeCheckObj(id, status_check, chck) {
@@ -206,6 +209,25 @@ function changeCheckObj(id, status_check, chck) {
         }
         else if (result.status === 'error') {
             toastError(result.text)
+        }
+    }).fail(function () {
+        console.log('Ha ocurrido un error inesperado :(')
+    })
+}
+
+function changeStatusAct(element, url, status) {
+    $.ajax({
+        method: "POST",
+        url: url,
+        data: { csrfmiddlewaretoken: getCSRFTokenValue(), status: status}
+    }).done(function (result) {
+        if (result.status === 'success') {
+            toastSuccess(result.text)
+            $(element).closest('.collapsible-body').siblings('.collapsible-header').toggleClass('cancelled')
+        }
+        else if (result.status === 'error') {
+            toastError(result.text)
+            status ? $(element).prop('checked', false) : $(element).prop('checked', true)
         }
     }).fail(function () {
         console.log('Ha ocurrido un error inesperado :(')
@@ -504,7 +526,7 @@ function editUser() {
         let currentpass = form.querySelector('#current_pass')
         let newpass = form.querySelector('#new_pass')
         if (currentpass.value.trim().length === 0) {
-            toastWarning('Debe su contraseña actual')
+            toastWarning('Debe ingresar su contraseña actual')
         }
         else if (newpass.value.trim().length === 0) {
             toastWarning('Debe de ingresar la nueva contraseña')

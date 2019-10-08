@@ -13,3 +13,7 @@ footer{
     left: 0;
     bottom: 3px !important;
 }
+
+.cancelled{
+    background-color: #ffcdd2 !important;
+}
