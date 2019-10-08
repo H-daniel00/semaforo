@@ -186,7 +186,7 @@ def vRegistroActividades(request):
                     Objetivos.objects.create(nombre = obj, is_done = trueOrFalse(checked), actividad = activity)
             for evidencia in evidencias:
                 Evidencias.objects.create(evidencia = evidencia, nombre = evidencia.name, actividad = activity)
-            # send_notification_mail(request.user, activity.direccion.titular)
+            send_notification_mail(request.user, activity.direccion.titular)
             messages.success(request, 'Actividad agregada exitosamente')
         except Exception as e:
             print(e)
