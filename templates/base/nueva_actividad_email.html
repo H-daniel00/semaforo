@@ -11,7 +11,7 @@
             font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
         }
 
-        img{
+        img {
             width: 100%;
         }
 
@@ -31,52 +31,24 @@
             margin: auto;
             width: 80%;
         }
-
-        .btn {
-            text-decoration: none;
-            color: #fff;
-            background-color: #892541;
-            text-align: center;
-            letter-spacing: .5px;
-            -webkit-transition: background-color .2s ease-out;
-            transition: background-color .2s ease-out;
-            cursor: pointer;
-            font-size: 14px;
-            outline: 0;
-            border: none;
-            border-radius: 2px;
-            margin: auto;
-            display: block;
-            height: 36px;
-            line-height: 36px;
-            padding: 0 16px;
-            text-transform: uppercase;
-            vertical-align: middle;
-            -webkit-tap-highlight-color: transparent;
-            width: 20%;
-        }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <img src="" alt="">
+        <img src="http://controlsedec.tabasco.gob.mx/static/images/banner-email.webp" alt="">
         <br>
         <br>
-        <br>
-        <h2 class="estimado">Estimado(a): {{to_user}}</h2>
+        <h4 class="estimado">Estimado(a): {{to_user}}</h4>
         <div class="container-text">
-            <h3 class="text">Se le ha asignado una nueva actividad por {{from_user}}.
-                Le invitamos a acceder al sistema de control para ver más detalles.
-            </h3>
+            <p class="text">Se le ha asignado una nueva actividad por <b>{{from_user}}</b>.
+                Le invitamos a <a href="http://controlsedec.tabasco.gob.mx/direccion/acceso/">acceder al sistema de
+                    control</a> para ver más detalles.
+            </p>
         </div>
         <br>
         <br>
-        <a href="#" class="btn">Ir</a>
-        <br>
-        <br>
-        <br>
-        <img src="" alt="">
+        <img src="http://controlsedec.tabasco.gob.mx/static/images/footer-email.webp" alt="">
     </div>
 </body>
 
