@@ -27,22 +27,24 @@
             <a href="#" class="brand-logo center">SEDEC</a>
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a target="_blank" href="{% url 'direccion:principal' %}">Panel</a></li>
                 {% block extralist %}
                 {% endblock %}
                 {% if user.is_staff %}
                 <li><a href="{% url 'admin:prinAdmin' %}">Principal</a></li>
                 {% endif %}
-                <li><a href="{% url 'direccion:logout' %}">Cerrar sesión</a></li>
+                <li><a href="{% url 'logout' %}">Cerrar sesión</a></li>
             </ul>
         </div>
     </nav>
     <ul class="sidenav" id="mobile-demo">
+        <li><a target="__blank" href="{% url 'direccion:principal' %}">Panel</a></li>
         {% block extralistmob %}
         {% endblock %}
         {% if user.is_staff %}
         <li><a href="{% url 'admin:prinAdmin' %}">Principal</a></li>
         {% endif %}
-        <li><a href="{% url 'direccion:logout' %}">Cerrar sesión</a></li>
+        <li><a href="{% url 'logout' %}">Cerrar sesión</a></li>
     </ul>
     {% endblock %}
     {% block maincontent %}

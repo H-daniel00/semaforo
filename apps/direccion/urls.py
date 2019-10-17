@@ -1,17 +1,15 @@
 from django.urls import path
-from .views import (vLogin, vLogout, vPrinDirec, vPerfil, vCambiarAvatar, vCambiarNombreUsuario, vCambiarPassword, vCorreosNotificacion, vActividadEstatus,
+from .views import (vPrincipal, vPrinDirec, vPerfil, vCambiarAvatar, vCambiarNombreUsuario, vCambiarPassword, vCorreosNotificacion, vActividadEstatus,
                     vRegistroActividades, vEliminarActividades, vEditarActividad, vObtenerActividades,
                     vEditarCheckObjetivo, vEliminarObjetivo, vEditarObjetivo, vAgregarObjetivos, vEditarComentario,
-                    vRegistroUsuarios, vAgregarEvidencias, vEliminarEvidencias,)
+                    vAgregarEvidencias, vEliminarEvidencias,)
 from .download_evidences import descargarEvidenciasZip
 app_name = 'direccion'
 
 urlpatterns = [
     path('', vPrinDirec, name = 'prinDirect'),
-    path('acceso/', vLogin, name = "login"),
-    path('logout/', vLogout, name = 'logout'),
-    path('registro/', vRegistroUsuarios, name = 'rUsuario'),
     path('perfil/', vPerfil, name = 'perfil'),
+    path('actividades/', vPrincipal, name = 'principal'),
     #Activities
     path('actividad/agregar', vRegistroActividades, name = 'rActividad'),
     path('actividad/<int:id>/eliminar', vEliminarActividades, name = 'eActividad'),

@@ -12,7 +12,7 @@ from .send_email import send_notification_mail
 
 def vLogin(request):
     if request.user.is_authenticated:
-	    return redirect('direccion:logout')
+	    return redirect('logout')
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -25,17 +25,18 @@ def vLogin(request):
                 return redirect('direccion:prinDirect')
         else:
             messages.add_message(request, messages.ERROR,'Usuario y/o contraseña no válidos')
-        return redirect('direccion:login')
+        return redirect('login')
     return render(request, 'base/login.html')
 
 def vLogout(request):
     logout(request)
-    return redirect('direccion:login')
+    return redirect('login')
 
 @login_required
 def vPrinDirec(request):
     return render(request, 'direccion/prinDirec.html')
 
+@login_required
 def vPrincipal(request):
     context = {'direcciones': Direcciones.objects.exclude(codename = 'sg') }
     return render(request, 'base/main.html', context)
@@ -59,7 +60,7 @@ def vRegistroUsuarios(request):
             except expression as identifier:
                 print(identifier)
                 messages.error(request,'Ha ocurrido un error. Intente de nuevo por favor')
-                return redirect('direccion:rUsuario')    
+                return redirect('rUsuario')    
             autenticar = authenticate(username = usuario.username, password = pass_unhash)
             if autenticar is not None:
                 auth_login(request, autenticar)
@@ -69,15 +70,15 @@ def vRegistroUsuarios(request):
                 else:
                     print('ide1')
                     messages.error(request,'Ha ocurrido un error. Intente de nuevo por favor')
-                    return redirect('direccion:login')
+                    return redirect('login')
             else:
                 print('ide2')
                 messages.error(request,'Usuario y/o contraseña no válidos')
-                return redirect('direccion:login')
+                return redirect('login')
         else:
             print('ide3')
             messages.error(request,'Ha ocurrido un error. Intente de nuevo por favor')
-            return redirect('direccion:rUsuario')
+            return redirect('rUsuario')
     else:
         fUsuario = fRegistroUsuariosDir()
         context = {'fUsuario' : fUsuario}
@@ -144,7 +145,7 @@ def vCambiarPassword(request):
             return redirect('direccion:perfil')
     else:
         messages.error(request, 'Ha ocurrido un error inesperado')
-    return redirect('direccion:login')
+    return redirect('login')
 
 @login_required
 def vCorreosNotificacion(request):

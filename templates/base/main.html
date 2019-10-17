@@ -30,7 +30,11 @@ ul.collapsible{
     color: #B8B8B8;
   }
 {% endblock %}
-{% block navbar %}
+{% block extralist %}
+<li><a href="{% url 'direccion:prinDirect' %}">Principal</a></li>
+{% endblock %}
+{% block extralistmob %}
+<li><a href="{% url 'direccion:prinDirect' %}">Principal</a></li>
 {% endblock %}
 {% block maincontent %}
 <button class="btn viewSlide hide-on-small-only"><i class="material-icons">view_carousel</i></button>
@@ -65,7 +69,7 @@ ul.collapsible{
         }, 130000)
     });
     function getActivities() {
-        $.getJSON("direccion/ajax/actividades")
+        $.getJSON("/direccion/ajax/actividades")
             .done(function (data) {
                 toastSuccess('Datos actualizados')
                 showActivitiesModule(data)
@@ -96,7 +100,7 @@ ul.collapsible{
             col2Div.classList.add('col', 'l9', 'm9', 's9')
             ul.classList.add('collapsible')
             img.classList.add('responsive-img')
-            img.src = direction.avatar != null ? direction.avatar : 'static/images/avatar.png'
+            img.src = direction.avatar != null ? direction.avatar : '/static/images/avatar.png'
             b.textContent = direction.name
             span.textContent = `Titular: ${direction.titular}`
             col1Div.append(img)
@@ -143,7 +147,7 @@ ul.collapsible{
             col1Div.classList.add('col', 'l2', 'center-align')
             col2Div.classList.add('col', 'l10')
             img.classList.add('responsive-img')
-            img.src = direction.avatar != null ? direction.avatar : 'static/images/avatar.png'
+            img.src = direction.avatar != null ? direction.avatar : '/static/images/avatar.png'
             ul.classList.add('collapsible')
             h5.textContent = direction.name
             h6.textContent = `Titular: ${direction.titular}`
