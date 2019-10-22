@@ -1,11 +1,11 @@
 import os
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import login as auth_login , authenticate, logout, update_session_auth_hash
 from django.contrib import messages
 from django.db.models import Count
-from .models import Usuarios, Actividades, Objetivos, Direcciones, Evidencias, getPercentActivity, getLightActivity, Correos_Notificacion
+from .models import Usuarios, Permisos, Actividades, Objetivos, Direcciones, Evidencias, getPercentActivity, getLightActivity, Correos_Notificacion
 from .forms import fRegistroUsuariosDir, fCorreosNotificacion
 from .validate_file import validate_file_type, validate_img_type
 from .send_email import send_notification_mail
@@ -36,10 +36,21 @@ def vLogout(request):
 def vPrinDirec(request):
     return render(request, 'direccion/prinDirec.html')
 
+# Verificar si el usuario tiene permiso para ver el panel
+def see_panel_test(user):
+    if user.is_superuser:
+        return True
+    elif Permisos.objects.filter(usuario = user).exists():
+        if user.permisos.see_panel:
+            return True
+        else: 
+            return False
+    else:
+        return False        
+
 @login_required
+@user_passes_test(see_panel_test, login_url = '/direccion')
 def vPrincipal(request):
-    if not request.user.permisos.see_panel:
-        return redirect('direccion:prinDirect')
     context = {'direcciones': Direcciones.objects.exclude(codename = 'sg') }
     return render(request, 'base/main.html', context)
 
