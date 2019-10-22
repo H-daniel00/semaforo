@@ -38,7 +38,7 @@ def vPrinDirec(request):
 
 @login_required
 def vPrincipal(request):
-    if not request.user.permisos.see_panel or not request.user.is_superuser:
+    if not request.user.permisos.see_panel:
         return redirect('direccion:prinDirect')
     context = {'direcciones': Direcciones.objects.exclude(codename = 'sg') }
     return render(request, 'base/main.html', context)

@@ -27,7 +27,7 @@
             <a href="#" class="brand-logo center">SEDEC</a>
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                {% if user.permisos.see_panel or user.is_superuser %}
+                {% if user.permisos.see_panel %}
                 <li><a target="_blank" href="{% url 'direccion:principal' %}">Panel</a></li>
                 {% endif %}
                 {% block extralist %}
