@@ -15,6 +15,20 @@
     {% block extrarlink %}
     {% endblock %}
     <style>
+        .logo-rotation {
+            -webkit-animation: rotation 10s infinite linear;
+        }
+
+        @-webkit-keyframes rotation {
+            from {
+                -webkit-transform: rotate(0deg);
+            }
+
+            to {
+                -webkit-transform: rotate(359deg);
+            }
+        }
+
         {% block extrastyles %}
         {% endblock %}
     </style>
@@ -61,7 +75,7 @@
     <footer class="center-align white">
         <br><br>
         <div class="center-align">
-            <img src="{% static 'images/logo-esencia-dorado.png' %}" alt="" width="50px">
+            <img src="{% static 'images/logo-esencia-dorado.png' %}" alt="" width="50px" class="logo-rotation">
         </div>
         <span class="grey-text lighten-2">© Powered by Unidad de Apoyo Técnico e Informático</span>
     </footer>
