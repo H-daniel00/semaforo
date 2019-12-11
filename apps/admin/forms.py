@@ -8,3 +8,13 @@ class fRegistroUsuarios(forms.ModelForm):
         widgets = {
             'password' : forms.PasswordInput(render_value = True),
         }
+
+class fCambiarContrasena(forms.Form):
+    password = forms.CharField(label = 'Contraseña', max_length = 8, widget = forms.PasswordInput())
+    repeat_password = forms.CharField(label = 'Confirme la contraseña', max_length = 8, widget = forms.PasswordInput())
+
+    def clean_repeat_password(self):
+        repeat_password = self.cleaned_data['repeat_password']
+        if not repeat_password == self.cleaned_data['password']:
+            raise forms.ValidationError('La contraseña no coincide', code='invalid')
+        return repeat_password

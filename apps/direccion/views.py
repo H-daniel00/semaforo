@@ -36,7 +36,7 @@ def vLogout(request):
 def vPrinDirec(request):
     return render(request, 'direccion/prinDirec.html')
 
-# Verificar si el usuario tiene permiso para ver el panel
+# Verifica si el usuario tiene permiso para ver el panel
 def see_panel_test(user):
     if user.is_superuser:
         return True
@@ -46,7 +46,7 @@ def see_panel_test(user):
         else: 
             return False
     else:
-        return False        
+        return False      
 
 @login_required
 @user_passes_test(see_panel_test, login_url = '/direccion')

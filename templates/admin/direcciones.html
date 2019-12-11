@@ -44,13 +44,14 @@ width: 80% !important;
         </thead>
         <tbody>
             {% for direccion in direcciones %}
-            <tr {% if not direccion.is_active %}class="red lighten-5"{% endif %} >
+            <tr {% if not direccion.is_active %}class="red lighten-5" {% endif %}>
                 <td class="title-direc">{{direccion.nombre}}</td>
                 <td>{{direccion.titular.get_full_name}}</td>
                 <td class="center-align">{{ direccion.see_in_list|yesno:"Si,No," }}</td>
                 <td class="center-align">{{ direccion.see_in_select|yesno:"Si,No," }}</td>
                 <td>
-                    <a class="btn-small red del-dir {% if not direccion.is_active %}disabled{% endif %}" href="{% url 'admin:eDireccion' direccion.id %}">
+                    <a class="btn-small red del-dir {% if not direccion.is_active %}disabled{% endif %}"
+                        href="{% url 'admin:eDireccion' direccion.id %}">
                         <i class="material-icons">delete</i>
                     </a>
                     <a class="btn-small blue edit-dir" href="#">

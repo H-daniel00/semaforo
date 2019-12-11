@@ -1,29 +1,123 @@
 {% extends 'base/base.html' %}
+{% load static %}
+{% block extrastyles %}
+.title-direc{
+color: #892541;
+}
+a.btn-floating{
+background-color: #892541;
+}
+a.btn-floating:hover{
+background-color: #892541;
+}
+.vino{
+background-color: #892541;
+}
+.vino:hover{
+background-color: #892541;
+}
+.vino:focus{
+background-color: #892541;
+}
+.container{
+width: 80% !important;
+}
+{% endblock %}
+{% block extrarlink %}
+<link rel="stylesheet" href="{% static 'datatable/datatables.min.css' %}">
+{% endblock %}
 {% block maincontent %}
 <div class="container">
-    <form action="{% url 'admin:rUsuario' %}" method="post">
-        {% csrf_token %}
-        <div class="row">
-            <h5>Registro de usuarios</h5>
-            <div class="col l12">
-                <div class="input-field">
-                    {{fUsuario.username}}
-                    <label for="id_username">Usuario</label>
-                </div>
-                <div class="input-field">
-                    {{fUsuario.password}}
-                    <label for="id_password">Contraseña</label>
-                </div>
-                <div class="input-field">
-                    {{fUsuario.first_name}}
-                    <label for="id_first_name">Nombre</label>
-                </div>
-                <div class="input-field">
-                    {{fUsuario.direccion}}
-                </div>
-            </div>
-            <button type="submit" class="btn">Guardar</button>
-        </div>
-    </form>
+    <br>
+    <br>
+    <h4 class="center-align title-direc">Usuarios</h4>
+    <br>
+    <table id="example" class="cell-border hover" style="width:100%">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Usuario</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+            <tr>
+                <td class="title-direc">{{usuario.get_full_name}}</td>
+                <td>{{usuario.direccion.nombre}}</td>
+                <td>{{usuario.username}}</td>
+                <td>
+                    <a class="btn-small blue" href="{% url 'admin:cambiarPass' usuario.id %}">
+                        <i class="material-icons">lock_outline</i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
+<!-- Button new direction -->
+<div class="fixed-action-btn">
+    <a class="btn-floating btn-large waves-effect waves-light modal-trigger " href="#user-modal"><i
+            class="material-icons">add</i></a>
+</div>
+<!-- Modal directions form -->
+<div id="user-modal" class="modal modal-fixed-footer white">
+    <div class="modal-content">
+        <h5>Registro de usuarios</h5>
+        <div class="divider"></div>
+        <div class="row">
+            <form action="{% url 'admin:rUsuario' %}" method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col l12">
+                        <div class="input-field">
+                            {{fUsuario.username}}
+                            <label for="id_username">Usuario</label>
+                        </div>
+                        <div class="input-field">
+                            {{fUsuario.password}}
+                            <label for="id_password">Contraseña</label>
+                        </div>
+                        <div class="input-field">
+                            {{fUsuario.first_name}}
+                            <label for="id_first_name">Nombre</label>
+                        </div>
+                        <div class="input-field">
+                            {{fUsuario.direccion}}
+                        </div>
+                    </div>
+                    <button type="submit" class="btn">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="waves-effect waves-light btn vino" id="save-dir" href="#act-modal">Guardar</a>
+    </div>
+</div>
+{% endblock %}
+{% block extrafunctions %}
+<script src="{% static 'datatable/datatables.min.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        formDirection()
+        $('#example').DataTable({
+            "lengthChange": false,
+            "lengthMenu": [[10, 20, -1], [10, 20, "Todas"]],
+            "info": false,
+            "language": {
+                "paginate": {
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                },
+                "zeroRecords": "Sin resultados",
+                "search": "Filtrar :"
+            }
+        });
+        var elems = document.querySelectorAll('.modal');
+        var instances = M.Modal.init(elems);
+    });
+</script>
 {% endblock %}

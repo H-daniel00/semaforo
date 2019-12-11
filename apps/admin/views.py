@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
-from .forms import fRegistroUsuarios
+from .forms import fRegistroUsuarios, fCambiarContrasena
 from apps.direccion.models import Usuarios, Permisos, Direcciones
 from apps.direccion.forms import fRegistroDirecciones
 
@@ -12,7 +12,8 @@ def vPrinAdmin(request):
 @login_required
 def vPrinUsuario(request):
     fUsuario = fRegistroUsuarios()
-    context = {'fUsuario': fUsuario}
+    usuarios = Usuarios.objects.all()
+    context = {'fUsuario': fUsuario, 'usuarios': usuarios}
     return render(request, 'admin/usuarios.html', context)
 
 @login_required
@@ -32,6 +33,26 @@ def vRegistroUsuarios(request):
             usuario.save()
     return redirect('admin:prinAdmin')
 
+def vCambiarContrasena(request, id):
+    try:
+        usuario = Usuarios.objects.get(id = id)
+        if request.method == 'POST':
+            fpass = fCambiarContrasena(request.POST)
+            if fpass.is_valid():
+                usuario.set_password(fpass.cleaned_data['password'])
+                usuario.save()
+                messages.success(request, 'La contraseña se cambió exitosamente')
+                return redirect('admin:prinUsuario')
+            else:
+                messages.error(request, 'No se pudo actualizar la contraseña')
+                return redirect('admin:cambiarPass', usuario.id)
+        else:
+            fpass = fCambiarContrasena(label_suffix = '')
+        context = {'fpass': fpass, 'user_full_name': usuario.get_full_name()}
+        return render(request, 'admin/reset_password.html', context)
+    except Usuarios.DoesNotExist:
+        return redirect('admin:prinUsuario')
+        
 @login_required
 def vRegistroDirecciones(request):
     if request.method == 'POST':
