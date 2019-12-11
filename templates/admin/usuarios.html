@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% block title %}Semáforo de actividades | Admin | Usuarios{% endblock %}
 {% block extrastyles %}
 .title-direc{
 color: #892541;
@@ -50,6 +51,9 @@ width: 80% !important;
                 <td>
                     <a class="btn-small blue" href="{% url 'admin:cambiarPass' usuario.id %}">
                         <i class="material-icons">lock_outline</i>
+                    </a>
+                    <a class="btn-small red" href="{% url 'admin:eUsuario' usuario.id %}">
+                        <i class="material-icons">delete</i>
                     </a>
                 </td>
             </tr>

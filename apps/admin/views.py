@@ -12,7 +12,7 @@ def vPrinAdmin(request):
 @login_required
 def vPrinUsuario(request):
     fUsuario = fRegistroUsuarios()
-    usuarios = Usuarios.objects.all()
+    usuarios = Usuarios.objects.filter(is_active = True)
     context = {'fUsuario': fUsuario, 'usuarios': usuarios}
     return render(request, 'admin/usuarios.html', context)
 
@@ -32,6 +32,16 @@ def vRegistroUsuarios(request):
             usuario.set_password(usuario.password)
             usuario.save()
     return redirect('admin:prinAdmin')
+
+def vEliminarUsuario(request, id):
+    try:
+        usuario = Usuarios.objects.get(id = id)
+        usuario.is_active = False
+        usuario.save()
+        messages.success(request, 'El usuario ha sido eliminado exitosamente')
+        return redirect('admin:prinUsuario')
+    except Usuarios.DoesNotExist:
+        return redirect('admin:prinUsuario')
 
 def vCambiarContrasena(request, id):
     try:
