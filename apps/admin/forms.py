@@ -10,8 +10,8 @@ class fRegistroUsuarios(forms.ModelForm):
         }
 
 class fCambiarContrasena(forms.Form):
-    password = forms.CharField(label = 'Contraseña', max_length = 8, widget = forms.PasswordInput())
-    repeat_password = forms.CharField(label = 'Confirme la contraseña', max_length = 8, widget = forms.PasswordInput())
+    password = forms.CharField(label = 'Contraseña', max_length = 128, widget = forms.PasswordInput())
+    repeat_password = forms.CharField(label = 'Confirme la contraseña', max_length = 128, widget = forms.PasswordInput())
 
     def clean_repeat_password(self):
         repeat_password = self.cleaned_data['repeat_password']
