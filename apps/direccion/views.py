@@ -1,10 +1,14 @@
+# Python
 import os
+# Django
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import login as auth_login , authenticate, logout, update_session_auth_hash
 from django.contrib import messages
 from django.db.models import Count
+from django.utils import timezone
+# App direccion
 from .models import Usuarios, Permisos, Actividades, Objetivos, Direcciones, Evidencias, getPercentActivity, getLightActivity, Correos_Notificacion
 from .forms import fRegistroUsuariosDir, fCorreosNotificacion
 from .validate_file import validate_file_type, validate_img_type
@@ -51,7 +55,8 @@ def see_panel_test(user):
 @login_required
 @user_passes_test(see_panel_test, login_url = '/direccion')
 def vPrincipal(request):
-    context = {'direcciones': Direcciones.objects.exclude(codename = 'sg') }
+    current_year = timezone.localtime().date().year
+    context = {'direcciones': Direcciones.objects.exclude(codename = 'sg'), 'current_year': current_year}
     return render(request, 'base/main.html', context)
 
 @login_required
@@ -286,6 +291,8 @@ def vEliminarActividades(request, id):
     return redirect('direccion:prinDirect')
 
 def vObtenerActividades(request):
+    current_year = timezone.localtime().date().year
+    year = request.GET.get('year', current_year)
     if request.is_ajax():
         direcciones = Direcciones.objects.exclude(see_in_list = False).order_by('nombre')
         data_dir = []
@@ -294,12 +301,11 @@ def vObtenerActividades(request):
                 'name': direccion.nombre,
                 'titular': getTitularName(direccion),
                 'avatar': getAvatarUrl(direccion),
-                'activities': getJsonAct(direccion.actividades.all())
+                'activities': getJsonAct(direccion.actividades.filter(timestamp__year = year))
             })
-        print(data_dir)
         return  JsonResponse(data_dir, safe = False)
     else:
-        return HttpResponse('maaaaall no lo soy')
+        return HttpResponse('Error')
 
 def getAvatarUrl(direction):
     try:

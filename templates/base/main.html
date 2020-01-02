@@ -8,27 +8,33 @@
 {% block extrastyles %}
 .container{
 width: 100% !important;
-margin-top: 5%;
+margin-top: 3%;
 }
 span.badge {
 min-width: 4rem;
 }
 .vino{
-background-color: #C73C63;
+background-color: #892541;
+}
+.txt-vino{
+color: #892541;
 }
 .direction{
 padding: 10px;
 }
 ul.collapsible{
-    overflow-y: scroll;
-    max-height: 54%;
+overflow-y: scroll;
+max-height: 54%;
 }
 .slick-prev:before {
-    color: #B8B8B8;
-  }
-  .slick-next:before {
-    color: #B8B8B8;
-  }
+color: #B8B8B8;
+}
+.slick-next:before {
+color: #B8B8B8;
+}
+.bn-cont{
+margin: 5px;
+}
 {% endblock %}
 {% block extralist %}
 <li><a href="{% url 'direccion:prinDirect' %}">Principal</a></li>
@@ -37,9 +43,17 @@ ul.collapsible{
 <li><a href="{% url 'direccion:prinDirect' %}">Principal</a></li>
 {% endblock %}
 {% block maincontent %}
-<button class="btn viewSlide hide-on-small-only"><i class="material-icons">view_carousel</i></button>
-<button class="btn viewModule hide-on-small-only"><i class="material-icons">view_module</i></button>
+<div class="bn-cont">
+    <button class="btn vino viewSlide hide-on-small-only"><i class="material-icons">view_carousel</i></button>
+    <button class="btn vino viewModule hide-on-small-only"><i class="material-icons">view_module</i></button>
+    <select class="browser-default right" name="" id="filter-year" style="width: 100px;">
+        <option value="2019">2019</option>
+        <option value="{{current_year}}" selected>{{current_year}}</option>
+    </select>
+    <h2 class="center-align txt-vino num-year">{{current_year}}</h2>
+</div>
 <div class="container">
+    <input type="hidden" value="">
     <div class="directions-slider"></div>
     <div class="directions-module row"></div>
 </div>
@@ -48,12 +62,15 @@ ul.collapsible{
 <script type="text/javascript" src="{% static 'slick/slick.js' %}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        document.querySelector('.viewSlide').addEventListener('click', function(){
+        document.querySelector('#filter-year').addEventListener('change', function () {
+            getActivities(this.value)
+        })
+        document.querySelector('.viewSlide').addEventListener('click', function () {
             $('.directions-slider').css('display', 'block')
             $('.directions-slider').get(0).slick.setPosition();
-            $('.directions-module').css('display', 'none')      
+            $('.directions-module').css('display', 'none')
         })
-        document.querySelector('.viewModule').addEventListener('click', function(){
+        document.querySelector('.viewModule').addEventListener('click', function () {
             $('.directions-slider').css('display', 'none')
             $('.directions-module').css('display', 'block')
         })
@@ -63,20 +80,27 @@ ul.collapsible{
             autoplaySpeed: 10000
         });
         $('.directions-slider').hide()
-        getActivities()
-        setInterval(function () {
-            getActivities()
-        }, 130000)
+        getActivities({{ current_year }})
+    let year = document.querySelector('#filter-year').value
+    setInterval(function () {
+        getActivities(year)
+    }, 130000)
     });
-    function getActivities() {
-        $.getJSON("/direccion/ajax/actividades")
-            .done(function (data) {
-                toastSuccess('Datos actualizados')
-                showActivitiesModule(data)
-                showActivitiesSlider(data)
-            }).fail(function () {
-                toastError('Ha ocurrido un error')
-            })
+    function getActivities(year) {
+        let regEX = /^\d{4}$/
+        if (regEX.test(year)) {
+            $.getJSON("/direccion/ajax/actividades?year=" + year)
+                .done(function (data) {
+                    document.querySelector('.num-year').textContent = year
+                    toastSuccess('Datos actualizados')
+                    showActivitiesModule(data)
+                    showActivitiesSlider(data)
+                }).fail(function () {
+                    toastError('Ha ocurrido un error')
+                })
+        } else {
+            toastError('Ha ocurrido un error')
+        }
     }
 
     function showActivitiesModule(data) {
@@ -178,14 +202,14 @@ ul.collapsible{
         })
     }
 
-    function orderObjs(data){
+    function orderObjs(data) {
         let aux;
-        for (let i = 0; i < data.length-1; i++) {
-            for (let j = 0; j < data.length-1; j++) {
-                if (data[j].percent > data[j+1].percent){
+        for (let i = 0; i < data.length - 1; i++) {
+            for (let j = 0; j < data.length - 1; j++) {
+                if (data[j].percent > data[j + 1].percent) {
                     aux = data[j]
-                    data[j] = data[j+1]
-                    data[j+1] = aux
+                    data[j] = data[j + 1]
+                    data[j + 1] = aux
                 }
             }
         }

@@ -30,6 +30,9 @@ class Actividades(models.Model):
     is_cancelled = models.BooleanField(default = False)    
     usuario = models.ForeignKey(Usuarios, blank = True, on_delete = models.CASCADE)
 
+    class Meta:
+        ordering = ['timestamp']
+
     def get_porcent(self):
         total = self.objetivos.count()
         total_done = self.objetivos.filter(is_done = True).count()
