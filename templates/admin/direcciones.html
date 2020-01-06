@@ -40,6 +40,7 @@ width: 80% !important;
                 <th>Titular</th>
                 <th>Ver en lista</th>
                 <th>Ver en select</th>
+                <th>Total actividades</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -50,6 +51,7 @@ width: 80% !important;
                 <td>{{direccion.titular.get_full_name}}</td>
                 <td class="center-align">{{ direccion.see_in_list|yesno:"Si,No," }}</td>
                 <td class="center-align">{{ direccion.see_in_select|yesno:"Si,No," }}</td>
+                <td class="center-align">{{ direccion.actividades.count }}</td>
                 <td>
                     <a class="btn-small red del-dir {% if not direccion.is_active %}disabled{% endif %}"
                         href="{% url 'admin:eDireccion' direccion.id %}">
@@ -57,6 +59,9 @@ width: 80% !important;
                     </a>
                     <a class="btn-small blue edit-dir" href="#">
                         <i class="material-icons">edit</i>
+                    </a>
+                    <a class="btn-small blue reset-dir" href="{% url 'admin:resetDireccion' direccion.id %}">
+                        <i class="material-icons">replay</i>
                     </a>
                 </td>
             </tr>

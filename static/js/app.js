@@ -157,6 +157,21 @@ $(function () {
             }
         })
     })
+    $('.reset-dir').on('click', function (e) {
+        e.preventDefault()
+        Swal.fire({
+            title: '¿Está seguro(a) de reiniciar esta dirección?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí'
+        }).then((result) => {
+            if (result.value) {
+                location.href = $(this).attr('href')
+            }
+        })
+    })
     $('.obj-saved').on('change', function () {
         changeCheckObj($(this).val(), $(this).prop("checked"), $(this))
     })

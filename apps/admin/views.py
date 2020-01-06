@@ -5,11 +5,21 @@ from .forms import fRegistroUsuarios, fCambiarContrasena
 from apps.direccion.models import Usuarios, Permisos, Direcciones
 from apps.direccion.forms import fRegistroDirecciones
 
+# check admin
+def check_admin(user):
+    if user.is_superuser or user.is_staff:
+        return True
+    else:
+        return False
+
+
 @login_required
+@user_passes_test(check_admin)
 def vPrinAdmin(request):
     return render(request, 'admin/prinAdmin.html')
 
 @login_required
+@user_passes_test(check_admin)
 def vPrinUsuario(request):
     fUsuario = fRegistroUsuarios()
     usuarios = Usuarios.objects.filter(is_active = True)
@@ -17,6 +27,7 @@ def vPrinUsuario(request):
     return render(request, 'admin/usuarios.html', context)
 
 @login_required
+@user_passes_test(check_admin)
 def vPrinDireccion(request):
     fDireccion = fRegistroDirecciones()
     direcciones = Direcciones.objects.order_by('is_active')
@@ -24,6 +35,7 @@ def vPrinDireccion(request):
     return render(request, 'admin/direcciones.html', context)
 
 @login_required
+@user_passes_test(check_admin)
 def vRegistroUsuarios(request):
     if request.method == 'POST':
         fUsuario = fRegistroUsuarios(request.POST)
@@ -33,6 +45,8 @@ def vRegistroUsuarios(request):
             usuario.save()
     return redirect('admin:prinAdmin')
 
+@login_required
+@user_passes_test(check_admin)
 def vEliminarUsuario(request, id):
     try:
         usuario = Usuarios.objects.get(id = id)
@@ -43,6 +57,8 @@ def vEliminarUsuario(request, id):
     except Usuarios.DoesNotExist:
         return redirect('admin:prinUsuario')
 
+@login_required
+@user_passes_test(check_admin)
 def vCambiarContrasena(request, id):
     try:
         usuario = Usuarios.objects.get(id = id)
@@ -64,6 +80,7 @@ def vCambiarContrasena(request, id):
         return redirect('admin:prinUsuario')
         
 @login_required
+@user_passes_test(check_admin)
 def vRegistroDirecciones(request):
     if request.method == 'POST':
         fDireccion = fRegistroDirecciones(request.POST)
@@ -74,6 +91,7 @@ def vRegistroDirecciones(request):
     return redirect('admin:prinDireccion')
 
 @login_required
+@user_passes_test(check_admin)
 def vEliminarDireccion(request, id):
     if request.method == 'GET':
         try:
@@ -86,4 +104,18 @@ def vEliminarDireccion(request, id):
     else:
         messages.error(request,'Ha ocurrido un error. Intente de nuevo por favor')
     return redirect('admin:prinDireccion')
-            
+
+@login_required
+@user_passes_test(check_admin)
+def vResetDireccion(request, id):
+    if request.method == 'GET':
+        try:
+            direccion = Direcciones.objects.get(id = id)
+            for act in direccion.actividades.all():
+                act.delete()
+            messages.success(request, 'Dirección reiniciada exitosamente')
+        except Direcciones.ObjectDoesNotExists:
+            messages.error(request,'No existe esa dirección')
+    else:
+        messages.error(request,'Ha ocurrido un error. Intente de nuevo por favor')
+    return redirect('admin:prinDireccion')
