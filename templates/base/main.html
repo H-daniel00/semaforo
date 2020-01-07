@@ -83,6 +83,7 @@ margin: 5px;
         getActivities({{ current_year }})
     let year = document.querySelector('#filter-year').value
     setInterval(function () {
+        let year = document.querySelector('#filter-year').value
         getActivities(year)
     }, 130000)
     });
