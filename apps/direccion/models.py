@@ -49,7 +49,7 @@ def act_directory_path(instance, filename):
 class Evidencias(models.Model):
     evidencia = models.FileField(upload_to = act_directory_path, null = True, blank = True)
     nombre = models.CharField(max_length = 500)
-    timestamp = models.DateTimeField(auto_now = True)
+    timestamp = models.DateTimeField(auto_now_add = True)
     actividad = models.ForeignKey(Actividades, null = True, blank = True, related_name = 'evidencias' , on_delete = models.CASCADE)
 
 class Objetivos(models.Model):

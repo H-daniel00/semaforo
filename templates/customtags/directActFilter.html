@@ -27,7 +27,8 @@
                     <div class="switch">
                         <label>
                             Cancelado
-                            <input type="checkbox" class="cancel-act" data-url="{% url 'direccion:edEstatusAct' act.id %}"
+                            <input type="checkbox" class="cancel-act"
+                                data-url="{% url 'direccion:edEstatusAct' act.id %}"
                                 {% if act.is_cancelled %}checked{% endif %}>
                             <span class="lever"></span>
                         </label>
@@ -36,6 +37,8 @@
                 {% endif %}
                 <span>Creado por:
                     <b>{% if act.usuario == user %}Usted{% else %}{{act.usuario.get_full_name}}{% endif %}</b></span>
+                <br>
+                <span>Fecha de creación: <b>{{act.timestamp}}</b></span>
                 <div class="row right-align">
                     <a href="{% url 'direccion:eComentario' act.id %}"
                         class="btn blue {% if act.direccion == user.direccion %}add-comment{% else %}show-comment{% endif %}"

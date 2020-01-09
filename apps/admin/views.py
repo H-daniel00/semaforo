@@ -107,6 +107,11 @@ def vEliminarDireccion(request, id):
 
 @login_required
 @user_passes_test(check_admin)
+def vEditarDireccion(request, id):
+    return render(request, 'admin/edit_direccion.html')
+
+@login_required
+@user_passes_test(check_admin)
 def vResetDireccion(request, id):
     if request.method == 'GET':
         try:
