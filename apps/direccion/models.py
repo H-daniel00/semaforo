@@ -24,7 +24,7 @@ class Permisos(models.Model):
 class Actividades(models.Model):
     nombre = models.CharField(max_length = 500)
     folio = models.CharField(max_length = 10, null = True, blank = True)
-    timestamp = models.DateTimeField(auto_now = True)
+    timestamp = models.DateTimeField(auto_now_add = True)
     comentarios = models.CharField(max_length = 700, null = True, blank = True,  default = '')
     direccion = models.ForeignKey(Direcciones, null = True, blank = True, related_name = 'actividades' , on_delete = models.CASCADE)
     is_cancelled = models.BooleanField(default = False)    
