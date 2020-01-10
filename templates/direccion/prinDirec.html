@@ -29,6 +29,12 @@ table-layout: fixed;
 td{
 overflow-wrap: break-word;
 }
+.bn-cont{
+margin: 5px;
+}
+.txt-vino{
+color: #892541;
+}
 {% endblock %}
 {% block direcName %}{{user.direccion.nombre}}{% endblock %}
 {% block extralist %}
@@ -38,16 +44,26 @@ overflow-wrap: break-word;
 <li><a href="{% url 'direccion:perfil' %}">Configuraciones</a></li>
 {% endblock %}
 {% block maincontent %}
+<div class="bn-cont">
+    <form method="get" id="formYear">
+        <select class="browser-default right" name="year" id="filter-year" style="width: 100px;">
+            <option value="" selected>----</option>
+            <option value="2019">2019</option>
+            <option value="2020">2020</option>
+        </select>
+    </form>
+</div>
 <div class="container">
     <br>
     <br>
     <h4 class="center-align title-direc">{{user.direccion.nombre}}</h4>
+    <h5 class="center-align txt-vino num-year">{{current_year}}</h5>
     <br>
     <br>
     {% if user.permisos.see_all %}
-    {% showAllDirecActivities user %}
+    {% showAllDirecActivities user current_year %}
     {% else %}
-    {% showFilterDirectActivities user %}
+    {% showFilterDirectActivities user current_year %}
     {% endif %}
     <!-- Button new activity -->
     <div class="fixed-action-btn">
@@ -119,6 +135,14 @@ overflow-wrap: break-word;
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         formActivity()
+        document.querySelector('#filter-year').addEventListener('change', function () {
+            let regEX = /^\d{4}$/
+            let year = this.value
+            let formYear = document.querySelector('#formYear')
+            if (regEX.test(year)) {
+                formYear.submit()
+            }
+        })
         var modal = document.querySelectorAll('.modal');
         var modal_instances = M.Modal.init(modal);
         var collapsible = document.querySelectorAll('.collapsible');
@@ -127,6 +151,7 @@ overflow-wrap: break-word;
         var instances = M.Sidenav.init(elems);
         var select = document.querySelectorAll('#id_direccion');
         var select_instances = M.FormSelect.init(select);
+
     });
 </script>
 {% endblock %}

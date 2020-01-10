@@ -1,5 +1,6 @@
 # Python
 import os
+import re
 # Django
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -13,6 +14,7 @@ from .models import Usuarios, Permisos, Actividades, Objetivos, Direcciones, Evi
 from .forms import fRegistroUsuariosDir, fCorreosNotificacion
 from .validate_file import validate_file_type, validate_img_type
 from .send_email import send_notification_mail
+patron = re.compile(r'^\d{4}$')
 
 def vLogin(request):
     if request.user.is_authenticated:
@@ -38,7 +40,11 @@ def vLogout(request):
 
 @login_required
 def vPrinDirec(request):
-    return render(request, 'direccion/prinDirec.html')
+    current_year = request.GET.get('year', str(timezone.localtime().date().year))
+    if patron.search(current_year) is None:
+        current_year = timezone.localtime().date().year
+    context = {'current_year': current_year}
+    return render(request, 'direccion/prinDirec.html', context)
 
 # Verifica si el usuario tiene permiso para ver el panel
 def see_panel_test(user):
