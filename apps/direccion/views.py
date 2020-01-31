@@ -444,7 +444,7 @@ def vAgregarEvidencias(request):
             actividad = Actividades.objects.get(id = id_act)
             for evidencia in evidencias:
                 if validate_file_type(evidencia):
-                    if evidencia.size <= 5242880:
+                    if evidencia.size <= 10485760:
                         Evidencias.objects.create(evidencia = evidencia, nombre = evidencia.name, actividad = actividad)
                         msj += ("<h6 class='right-align green-text'>" + evidencia.name + " se guardó correctamente" + "</h6>") 
                     else:

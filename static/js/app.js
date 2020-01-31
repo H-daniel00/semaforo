@@ -205,8 +205,8 @@ $(function () {
             confirmButtonText: 'Cerrar'
         })
     })
-    $('.cancel-act').on('click', function(){
-       changeStatusAct($(this), $(this).attr('data-url'), $(this).prop('checked'))
+    $('.cancel-act').on('click', function () {
+        changeStatusAct($(this), $(this).attr('data-url'), $(this).prop('checked'))
     })
 });
 
@@ -234,7 +234,7 @@ function changeStatusAct(element, url, status) {
     $.ajax({
         method: "POST",
         url: url,
-        data: { csrfmiddlewaretoken: getCSRFTokenValue(), status: status}
+        data: { csrfmiddlewaretoken: getCSRFTokenValue(), status: status }
     }).done(function (result) {
         if (result.status === 'success') {
             toastSuccess(result.text)
@@ -389,7 +389,7 @@ function registerUser() {
 
 function showFiles(ele, files) {
     let ulFiles = ele.closest('.file-field').next('.collection')
-    let max_size = 5242880 //5 megabytes
+    let max_size = 10485760 //5 megabytes
     ulFiles.empty()
     for (let i = 0; i < files.length; i++) {
         if (files[i].size <= max_size) {
@@ -553,14 +553,6 @@ function editUser() {
         }
     })
 }
-
-
-
-
-
-
-
-
 
 
 
