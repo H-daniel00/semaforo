@@ -32,7 +32,7 @@
                     class="btn blue {% if act.direccion == user.direccion %}add-comment{% else %}show-comment{% endif %}"
                     data-comment="{% if act.comentarios %}{{act.comentarios}}{% endif %}"><i
                         class="material-icons">comment</i></a>
-                {% if act.usuario == user %}
+                {% if act.usuario == user or user.permisos.delete_all %}
                 <a href="{% url 'direccion:eActividad' act.pk %}" class="btn red del-act">
                     <i class="material-icons">delete</i>
                 </a>
@@ -67,7 +67,7 @@
                                 {% endif %}
                             </td>
                             <td class="center-align">
-                                {% if act.usuario == user %}
+                                {% if act.usuario == user or user.permisos.delete_all %}
                                 <a class="btn-small red del-obj" href="{% url 'direccion:eObjetivo' obj.id %}">
                                     <i class="material-icons">delete</i>
                                 </a>

@@ -19,6 +19,7 @@ class Permisos(models.Model):
     assign_all = models.BooleanField(default = False)
     see_all = models.BooleanField(default = False)
     see_panel = models.BooleanField(default = False)
+    delete_all = models.BooleanField(default = False)
     usuario = models.OneToOneField(Usuarios, blank = True, null = True, on_delete = models.CASCADE, related_name = 'permisos')
 
 class Actividades(models.Model):
