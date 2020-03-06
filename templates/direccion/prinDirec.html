@@ -65,13 +65,13 @@ color: #892541;
     {% else %}
     {% showFilterDirectActivities user current_year %}
     {% endif %}
-    {% if user.permisos.assign_all %}
+    {% comment %}{% if user.permisos.assign_all %}{% endcomment %}
     <!-- Button new activity -->
     <div class="fixed-action-btn">
         <a class="btn-floating btn-large waves-effect waves-light modal-trigger" href="#act-modal"><i
                 class="material-icons">add</i></a>
     </div>
-    {% endif %}
+    {% comment %}{% endif %}{% endcomment %}
     <!-- Modal activity form -->
     <div id="act-modal" class="modal modal-fixed-footer white">
         <div class="modal-content">
