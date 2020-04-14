@@ -92,6 +92,14 @@ color: #892541;
                             {% selectDirectFilter %}
                         </div>
                         {% endif %}
+                        <div class="input-field">
+                            <select name="prioridad" id="id_prioridad">
+                                <option value="1">Alta</option>
+                                <option value="2">Media</option>
+                                <option value="3" selected>Baja</option>
+                            </select>
+                            <label for="id_prioridad">Seleccione una prioridad</label>
+                        </div>
                         <br>
                         <h5 class="center-align">Objetivos</h5>
                         <a class="btn right vino" id="add-objs"><i class="material-icons">add</i></a>
@@ -151,7 +159,7 @@ color: #892541;
         var collapsible_instances = M.Collapsible.init(collapsible);
         var elems = document.querySelectorAll('.sidenav');
         var instances = M.Sidenav.init(elems);
-        var select = document.querySelectorAll('#id_direccion');
+        var select = document.querySelectorAll('.input-field select');
         var select_instances = M.FormSelect.init(select);
 
     });

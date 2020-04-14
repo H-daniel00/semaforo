@@ -23,16 +23,25 @@ class Permisos(models.Model):
     usuario = models.OneToOneField(Usuarios, blank = True, null = True, on_delete = models.CASCADE, related_name = 'permisos')
 
 class Actividades(models.Model):
+    prioridad_choices = [
+        (1, 'Alta'),
+        (2, 'Media'),
+        (3, 'Baja')
+    ]
     nombre = models.CharField(max_length = 500)
     folio = models.CharField(max_length = 10, null = True, blank = True)
     timestamp = models.DateTimeField(auto_now_add = True)
     comentarios = models.CharField(max_length = 700, null = True, blank = True,  default = '')
+    prioridad = models.SmallIntegerField(default = 2, choices = prioridad_choices)
     direccion = models.ForeignKey(Direcciones, null = True, blank = True, related_name = 'actividades' , on_delete = models.CASCADE)
     is_cancelled = models.BooleanField(default = False)    
     usuario = models.ForeignKey(Usuarios, blank = True, on_delete = models.CASCADE)
 
+    def get_priority(self):
+        return dict(self.prioridad_choices).get(self.prioridad, 'No especificado')
+
     class Meta:
-        ordering = ['timestamp']
+        ordering = ['prioridad', '-timestamp']
 
     def get_porcent(self):
         total = self.objetivos.count()

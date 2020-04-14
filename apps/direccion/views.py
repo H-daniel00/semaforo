@@ -193,6 +193,7 @@ def vRegistroActividades(request):
     if request.method == 'POST':
         nombre = request.POST.get('act-name')
         direccion = request.POST.get('direccion', None)
+        prioridad = request.POST.get('prioridad', None)
         objs = request.POST.getlist('obj-name')
         objs_check = request.POST.getlist('obj-check')
         evidencias = request.FILES.getlist('evidencias')
@@ -202,7 +203,7 @@ def vRegistroActividades(request):
                 direccion = request.user.direccion
             else:
                 direccion = Direcciones.objects.get(id__exact = direccion)
-            activity = Actividades.objects.create(nombre = nombre, direccion = direccion, usuario = request.user)
+            activity = Actividades.objects.create(nombre = nombre, direccion = direccion, usuario = request.user, prioridad = prioridad)
             activity.folio = folio + str(activity.id)
             activity.save()
             for obj, checked in zip(objs, objs_check):

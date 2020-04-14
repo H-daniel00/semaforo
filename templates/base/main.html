@@ -134,7 +134,7 @@ margin: 5px;
             cardDiv.append(rowDiv, ul)
             parentDiv.append(cardDiv)
             if (direction.activities != null) {
-                orderObjs(direction.activities).forEach(activity => {
+                direction.activities.forEach(activity => {
                     let li = document.createElement('li')
                     let div = document.createElement('div')
                     let i = document.createElement('i')
