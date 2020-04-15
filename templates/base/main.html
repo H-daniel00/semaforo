@@ -139,6 +139,8 @@ margin: 5px;
                     let div = document.createElement('div')
                     let i = document.createElement('i')
                     let span = document.createElement('span')
+                    let priority = document.createElement('div')
+                    priority.className = `priority z-depth-1 ${activity.priority}`
                     div.classList.add('collapsible-header')
                     if (activity.is_cancelled) div.classList.add('cancelled')
                     i.classList.add('material-icons')
@@ -148,6 +150,7 @@ margin: 5px;
                     span.textContent = activity.percent + '%'
                     div.append(i, span)
                     span.before(activity.name)
+                    span.append(priority)
                     li.append(div)
                     ul.append(li)
                 })
@@ -181,11 +184,13 @@ margin: 5px;
             rowDiv.append(col1Div, col2Div)
             parentDiv.append(rowDiv, ul)
             if (direction.activities != null) {
-                orderObjs(direction.activities).forEach(activity => {
+                direction.activities.forEach(activity => {
                     let li = document.createElement('li')
                     let div = document.createElement('div')
                     let i = document.createElement('i')
                     let span = document.createElement('span')
+                    let priority = document.createElement('div')
+                    priority.className = `priority z-depth-1 ${activity.priority}`
                     div.classList.add('collapsible-header')
                     if (activity.is_cancelled) div.classList.add('cancelled')
                     i.classList.add('material-icons')
@@ -195,6 +200,7 @@ margin: 5px;
                     span.textContent = activity.percent + '%'
                     div.append(i, span)
                     span.before(activity.name)
+                    span.append(priority)
                     li.append(div)
                     ul.append(li)
                 })
@@ -203,18 +209,18 @@ margin: 5px;
         })
     }
 
-    function orderObjs(data) {
-        let aux;
-        for (let i = 0; i < data.length - 1; i++) {
-            for (let j = 0; j < data.length - 1; j++) {
-                if (data[j].percent > data[j + 1].percent) {
-                    aux = data[j]
-                    data[j] = data[j + 1]
-                    data[j + 1] = aux
-                }
-            }
-        }
-        return data
-    }
+    // function orderObjs(data) {
+    //     let aux;
+    //     for (let i = 0; i < data.length - 1; i++) {
+    //         for (let j = 0; j < data.length - 1; j++) {
+    //             if (data[j].percent > data[j + 1].percent) {
+    //                 aux = data[j]
+    //                 data[j] = data[j + 1]
+    //                 data[j + 1] = aux
+    //             }
+    //         }
+    //     }
+    //     return data
+    // }
 </script>
 {% endblock %}

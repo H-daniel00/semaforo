@@ -334,7 +334,8 @@ def getJsonAct(activities):
                 'name': act.nombre,
                 'percent': act.get_porcent(),
                 'color': act.get_light(),
-                'is_cancelled': act.is_cancelled
+                'is_cancelled': act.is_cancelled,
+                'priority': act.get_priority_class()
             })
     else:
         data = None

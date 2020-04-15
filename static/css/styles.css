@@ -1,19 +1,41 @@
-.brand-logo{
+.brand-logo {
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
-.card-panel{
+.card-panel {
     height: calc(50vh - 1.5rem);
     margin: .5rem 0 .3rem 0;
 }
 
-footer{
+footer {
     top: 0;
     right: 0;
     left: 0;
     bottom: 3px !important;
 }
 
-.cancelled{
+.cancelled {
     background-color: #ffcdd2 !important;
+}
+
+.priority {
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    margin: auto auto auto 10px;
+    border-radius: 50%;
+    background-color: red;
+    border: 2px solid white;
+}
+
+.high {
+    background-color: #f44336;
+}
+
+.medium {
+    background-color: #ff9800;
+}
+
+.low {
+    background-color: #ffeb3b;
 }

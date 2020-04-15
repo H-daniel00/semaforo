@@ -3,7 +3,9 @@
     {% for act in activities %}
     <li>
         <div class="collapsible-header {% if act.is_cancelled %}cancelled{% endif %}">
-            <i class="material-icons">spellcheck</i><span class="act-name">{{act.nombre}}</span>
+            <i class="material-icons">spellcheck</i><span class="act-name">{{act.nombre}}
+            </span>
+            <div class="priority z-depth-1 {{act.get_priority_class}}"></div>
             <span class="badge white-text" style="background-color: {{act.get_light}}">{{act.get_porcent}}%</span>
         </div>
         <div class="collapsible-body">

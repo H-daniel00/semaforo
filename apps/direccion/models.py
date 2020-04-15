@@ -37,6 +37,14 @@ class Actividades(models.Model):
     is_cancelled = models.BooleanField(default = False)    
     usuario = models.ForeignKey(Usuarios, blank = True, on_delete = models.CASCADE)
 
+    def get_priority_class(self):
+        if self.prioridad == 1:
+            return 'high'
+        elif self.prioridad == 2:
+            return 'medium'
+        else:
+            return 'low'
+
     def get_priority(self):
         return dict(self.prioridad_choices).get(self.prioridad, 'No especificado')
 

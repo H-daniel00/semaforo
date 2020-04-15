@@ -8,6 +8,7 @@
         <div class="collapsible-header {% if act.is_cancelled %}cancelled{% endif %}">
             <i class="material-icons">spellcheck</i><span class="act-name">{{act.nombre}}</span>
             <span style="padding-left: 10px;">({{ act.timestamp|date:"Y" }})</span>
+            <div class="priority z-depth-1 {{act.get_priority_class}}"></div>
             <span class="badge white-text" style="background-color: {{act.get_light}}">{{act.get_porcent}}%</span>
         </div>
         <div class="collapsible-body">
@@ -27,6 +28,8 @@
                 <b>{% if act.usuario == user %}Usted{% else %}{{act.usuario.get_full_name}}{% endif %}</b></span>
             <br>
             <span>Fecha de creación: <b>{{act.timestamp}}</b></span>
+            <br>
+            <span>Prioridad: <b>{{act.get_priority}}</b></span>
             <div class="row right-align">
                 <a href="{% url 'direccion:eComentario' act.id %}"
                     class="btn blue {% if act.direccion == user.direccion %}add-comment{% else %}show-comment{% endif %}"
