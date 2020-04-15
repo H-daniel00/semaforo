@@ -20,9 +20,13 @@ class Permisos(models.Model):
     see_all = models.BooleanField(default = False)
     see_panel = models.BooleanField(default = False)
     delete_all = models.BooleanField(default = False)
+    change_priority = models.BooleanField(default = False)
     usuario = models.OneToOneField(Usuarios, blank = True, null = True, on_delete = models.CASCADE, related_name = 'permisos')
 
 class Actividades(models.Model):
+    class Meta:
+        ordering = ['prioridad', '-timestamp']
+
     prioridad_choices = [
         (1, 'Alta'),
         (2, 'Media'),
@@ -42,14 +46,13 @@ class Actividades(models.Model):
             return 'high'
         elif self.prioridad == 2:
             return 'medium'
-        else:
+        elif self.prioridad == 3:
             return 'low'
+        else:
+            return 'none'
 
     def get_priority(self):
         return dict(self.prioridad_choices).get(self.prioridad, 'No especificado')
-
-    class Meta:
-        ordering = ['prioridad', '-timestamp']
 
     def get_porcent(self):
         total = self.objetivos.count()

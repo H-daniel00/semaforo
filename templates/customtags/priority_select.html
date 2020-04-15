@@ -1,0 +1,7 @@
+<select class="prioridad" class="browser-default" style="display: inline; width: 80px; height: 35px;"
+    data-default="{{opt_selected}}" data-act="{{act_id}}">
+    {% for value, choice in choices %}
+    <option value="{{value}}" {% if opt_selected == value %}selected{% endif %}>{{choice}}
+    </option>
+    {% endfor %}
+</select>

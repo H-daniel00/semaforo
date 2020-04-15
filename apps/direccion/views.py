@@ -297,6 +297,33 @@ def vEliminarActividades(request, id):
         messages.success(request, 'Actividad eliminada exitosamente')
     return redirect('direccion:prinDirect')
 
+def vEditarPrioridad(request):
+    if request.is_ajax():
+        id_act = request.POST.get('id', None)
+        prioridad = request.POST.get('prioridad', None)
+        try:
+            obj = Actividades.objects.get(id = id_act)
+            obj.prioridad = prioridad
+            obj.save()
+            obj.refresh_from_db()
+            info = {
+                'status' : 'success',
+                'text' : 'Prioridad actualizada exitosamente',
+                'priority': obj.prioridad,
+                'priority_class': obj.get_priority_class()
+            }
+        except Exception as e:
+            info = {
+                'status' : 'error',
+                'text' : 'Al parecer algo salió mal. Intente de nuevo'
+            }
+    else:
+        info = {
+            'status' : 'error',
+            'text' : 'Al parecer algo salió mal. Intente de nuevo'
+        }    
+    return JsonResponse(info, safe = False)
+
 def vObtenerActividades(request):
     current_year = timezone.localtime().date().year
     year = request.GET.get('year', current_year)

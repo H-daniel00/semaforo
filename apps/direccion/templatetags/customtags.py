@@ -1,6 +1,6 @@
 from django import template
 from django.utils import timezone
-from ..models import Direcciones
+from ..models import Direcciones, Actividades
 register = template.Library()
 
 @register.inclusion_tag('customtags/selectDirectAll.html')
@@ -33,3 +33,7 @@ def getNewActivitiesByYear(direct, user, year):
 def getOldActivitiesByYear(direct, user, year):
     activities = direct.actividades.filter(timestamp__year__lt = year)
     return {'activities': activities, 'user': user, 'total_old': len(activities)}
+
+@register.inclusion_tag('customtags/priority_select.html')
+def prioritySelect(opt_selected, act_id):
+    return {'choices': Actividades.prioridad_choices, 'opt_selected': opt_selected, 'act_id': act_id}

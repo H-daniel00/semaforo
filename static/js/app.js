@@ -208,7 +208,46 @@ $(function () {
     $('.cancel-act').on('click', function () {
         changeStatusAct($(this), $(this).attr('data-url'), $(this).prop('checked'))
     })
+    $('.prioridad').on('change', function () {
+        Swal.fire({
+            title: '¿Está seguro(a) de cambiar la prioridad a esta actividad?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí'
+        }).then((result) => {
+            if (result.value) {
+                changePriority($(this))
+            }
+            else {
+                $(this).val($(this).data('default'))
+            }
+        })
+    })
+
 });
+
+function changePriority(select) {
+    $.ajax({
+        method: "POST",
+        url: "ajax/actividad/prioridad",
+        data: { csrfmiddlewaretoken: getCSRFTokenValue(), prioridad: select.val(), id: select.data('act') }
+    }).done(function (result) {
+        if (result.status === 'success') {
+            toastSuccess(result.text)
+            $(select).attr('data-default', result.priority)
+            div_pri = $(select).closest('li').find('div.collapsible-header > div.priority')
+            $(div_pri)[0].className = `priority z-depth-1 ${result.priority_class}`
+        }
+        else if (result.status === 'error') {
+            toastError(result.text)
+            $(select).val($(select).data('default'))
+        }
+    }).fail(function () {
+        console.log('Ha ocurrido un error inesperado :(')
+    })
+}
 
 function changeCheckObj(id, status_check, chck) {
     $.ajax({
@@ -553,7 +592,3 @@ function editUser() {
         }
     })
 }
-
-
-
-

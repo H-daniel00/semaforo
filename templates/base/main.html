@@ -136,11 +136,10 @@ margin: 5px;
             if (direction.activities != null) {
                 direction.activities.forEach(activity => {
                     let li = document.createElement('li')
+                    li.className = `sem-${activity.priority}`
                     let div = document.createElement('div')
                     let i = document.createElement('i')
                     let span = document.createElement('span')
-                    let priority = document.createElement('div')
-                    priority.className = `priority z-depth-1 ${activity.priority}`
                     div.classList.add('collapsible-header')
                     if (activity.is_cancelled) div.classList.add('cancelled')
                     i.classList.add('material-icons')
@@ -150,7 +149,6 @@ margin: 5px;
                     span.textContent = activity.percent + '%'
                     div.append(i, span)
                     span.before(activity.name)
-                    span.append(priority)
                     li.append(div)
                     ul.append(li)
                 })

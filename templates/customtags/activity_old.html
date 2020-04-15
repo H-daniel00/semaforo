@@ -1,4 +1,5 @@
 {% load static %}
+{% load customtags %}
 <ul class="collapsible popout">
     <div class="divider"></div>
     <br>
@@ -29,7 +30,11 @@
             <br>
             <span>Fecha de creación: <b>{{act.timestamp}}</b></span>
             <br>
-            <span>Prioridad: <b>{{act.get_priority}}</b></span>
+            {% if act.usuario == user or user.permisos.change_priority %}
+            <span>Prioridad: {% prioritySelect act.prioridad act.id %}</span>
+            {% else %}
+            <span>Prioridad: {{act.get_priority}}</span>
+            {% endif %}
             <div class="row right-align">
                 <a href="{% url 'direccion:eComentario' act.id %}"
                     class="btn blue {% if act.direccion == user.direccion %}add-comment{% else %}show-comment{% endif %}"
