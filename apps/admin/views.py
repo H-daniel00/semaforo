@@ -108,7 +108,26 @@ def vEliminarDireccion(request, id):
 @login_required
 @user_passes_test(check_admin)
 def vEditarDireccion(request, id):
-    return render(request, 'admin/edit_direccion.html')
+    try:
+        direccion = Direcciones.objects.get(id = id)
+        if request.method == 'POST':
+            fdireccion = fRegistroDirecciones(request.POST, instance = direccion)
+            if fdireccion.has_changed():
+                if fdireccion.is_valid():
+                    direc = fdireccion.save(commit = False)
+                    direc.save(update_fields = ['nombre', 'codename', 'see_in_select', 'see_in_list', 'subdireccion'])
+                    messages.success(request, 'Cambios guardados exitosamente')
+                    return redirect('admin:edDireccion', direccion.id)
+                else:
+                    messages.error(request, 'El formulario es inválido. Intente de nuevo por favor')
+            else:
+                messages.warning(request, 'No se detectó ningún cambio')
+        else:
+            fdireccion = fRegistroDirecciones(instance = direccion)
+        context = {'fDireccion': fdireccion}
+        return render(request, 'admin/edit_direccion.html', context)
+    except expression as identifier:
+        return redirect('admin:prinDireccion')
 
 @login_required
 @user_passes_test(check_admin)

@@ -57,7 +57,7 @@ width: 80% !important;
                         href="{% url 'admin:eDireccion' direccion.id %}">
                         <i class="material-icons">delete</i>
                     </a>
-                    <a class="btn-small blue edit-dir" href="#">
+                    <a class="btn-small blue edit-dir" href="{% url 'admin:edDireccion' direccion.id %}">
                         <i class="material-icons">edit</i>
                     </a>
                     <a class="btn-small blue reset-dir" href="{% url 'admin:resetDireccion' direccion.id %}">
@@ -93,7 +93,13 @@ width: 80% !important;
                         <div class="row">
                             <div class="input-field">
                                 {{fDireccion.codename}}
-                                <label for="id_password">Codename</label>
+                                <label for="id_password">Nombre para control interno</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field">
+                                {{fDireccion.subdireccion}}
+                                <label for="id_password">Dirección a la que pertenece</label>
                             </div>
                         </div>
                         <div class="row center-align">
@@ -140,6 +146,8 @@ width: 80% !important;
         });
         var elems = document.querySelectorAll('.modal');
         var instances = M.Modal.init(elems);
+        var select = document.querySelectorAll('form select');
+        var select_instances = M.FormSelect.init(select)
     });
 </script>
 {% endblock %}

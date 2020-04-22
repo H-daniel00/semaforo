@@ -64,6 +64,13 @@ color: #892541;
     {% showAllDirecActivities user current_year %}
     {% else %}
     {% showFilterDirectActivities user current_year %}
+    {% if user.direccion.subdir.count > 0 %}
+    <br><br>
+    <h5>Direcciones asignadas</h5>
+    <div class="divider"></div>
+    <br><br><br>
+    {% showAllDirecActivities user current_year True %}
+    {% endif %}
     {% endif %}
     {% comment %}{% if user.permisos.assign_all %}{% endcomment %}
     <!-- Button new activity -->

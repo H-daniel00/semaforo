@@ -1,1 +1,64 @@
 {% extends 'base/base.html' %}
+{% block maincontent %}
+<!-- Modal directions form -->
+<div class="container">
+    <br><br>
+    <h5>Editar dirección</h5>
+    <div class="divider"></div>
+    <br>
+    <div class="row">
+        <form action="" method="post" id="dir-form">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col l8 offset-l2">
+                    <div class="row">
+                        <div class="input-field">
+                            {{fDireccion.nombre}}
+                            <label for="id_nombre">Nombre</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field">
+                            {{fDireccion.codename}}
+                            <label for="id_codename">Nombre para control interno</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field">
+                            {{fDireccion.subdireccion}}
+                            <label for="id_subdireccion">Dirección a la que pertenece</label>
+                        </div>
+                    </div>
+                    <div class="row center-align">
+                        <p>
+                            <label>
+                                {{ fDireccion.see_in_list }}
+                                <span>Mostrar en lista de actividades</span>
+                            </label>
+                        </p>
+                        <p>
+                            <label>
+                                {{fDireccion.see_in_select}}
+                                <span>Mostrar en select de direcciones</span>
+                            </label>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="row right">
+            <a href="{% url 'admin:prinDireccion' %}" class="waves-effect waves-light btn">Cancelar</a>
+            <a href="#!" class="waves-effect waves-light btn vino" id="save-dir">Guardar</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extrafunctions %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        formDirection()
+        var select = document.querySelectorAll('form select');
+        var select_instances = M.FormSelect.init(select)
+    });
+</script>
+{% endblock %}

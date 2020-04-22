@@ -17,4 +17,4 @@ class fRegistroUsuariosDir(forms.ModelForm):
 class fCorreosNotificacion(forms.ModelForm):
     class Meta:
         model = Correos_Notificacion
-        exclude = ['usuario'] 
+        exclude = ['usuario']

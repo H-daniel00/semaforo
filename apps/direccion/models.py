@@ -8,12 +8,16 @@ class Direcciones(models.Model):
     see_in_list = models.BooleanField(default = True)
     is_active = models.BooleanField(default = True)
     titular = models.OneToOneField('direccion.Usuarios', on_delete = models.CASCADE, null = True, blank = True)
+    subdireccion = models.ForeignKey('self', on_delete = models.SET_NULL, null = True, blank = True, related_name = 'subdir')
     def __str__(self):
         return '{}'.format(self.nombre)
 
 class Usuarios(AbstractUser):
     direccion = models.ForeignKey(Direcciones, null = True, blank = True, on_delete = models.PROTECT)
-    avatar = models.ImageField(upload_to = 'avatar/', null = True, blank = True)    
+    avatar = models.ImageField(upload_to = 'avatar/', null = True, blank = True)
+
+    def __str__(self):
+        return '{} {}'.format(self.first_name, self.last_name)
 
 class Permisos(models.Model):
     assign_all = models.BooleanField(default = False)

@@ -123,10 +123,6 @@ $(function () {
             }
         })
     })
-    $('.edit-dir').on('click', function (e) {
-        e.preventDefault()
-        alert('editando direcciónnnnn')
-    })
     $('.del-obj').on('click', function (e) {
         e.preventDefault()
         Swal.fire({

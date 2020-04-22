@@ -11,7 +11,7 @@
     </div>
     <div class="col l10">
         <h5>{{direct.nombre}}</h5>
-        <h6>Titular: {{direct.titular.first_name}}</h6>
+        <h6>Titular: {% if direct.titular %}{{direct.titular.first_name}}{% else %}No asignado{% endif %}</h6>
     </div>
 </div>
 {% getNewActivitiesByYear direct user current_year %}
