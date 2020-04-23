@@ -9,16 +9,22 @@ def selectDirectAll():
     return {'dirAll': direcciones}
 
 @register.inclusion_tag('customtags/selectDirectFilter.html')
-def selectDirectFilter():
-    direcciones = Direcciones.objects.exclude(see_in_select = False, is_active = False)
-    return {'dirFilter': direcciones}
+def selectDirectFilter(user = None):
+    user_dir = None
+    if user is not None:
+        direcciones = user.direccion.subdir.filter(see_in_select = True, is_active = True)
+        if user.direccion.see_in_select:
+            user_dir = user.direccion
+    else:
+        direcciones = Direcciones.objects.filter(see_in_select = True, is_active = True)
+    return {'dirFilter': direcciones, 'user_dir': user_dir}
 
 @register.inclusion_tag('customtags/directActAll.html')
 def showAllDirecActivities(user, year, assigned = False):
     if assigned:
         activities = user.direccion.subdir.filter(see_in_list = True, is_active = True)
     else:
-        activities = Direcciones.objects.exclude(see_in_list = False, is_active = False)
+        activities = Direcciones.objects.filter(see_in_list = True, is_active = True)
     return {'activities': activities, 'user': user, 'current_year': year}
 
 @register.inclusion_tag('customtags/directActFilter.html')

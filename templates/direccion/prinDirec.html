@@ -94,11 +94,13 @@ color: #892541;
                             <input type="text" name="act-name" id="act-name">
                             <label for="act-name">Nombre</label>
                         </div>
+
                         {% if user.permisos.assign_all %}
-                        <div class="input-field">
-                            {% selectDirectFilter %}
-                        </div>
+                        {% selectDirectFilter %}
+                        {% else %}
+                        {% selectDirectFilter user %}
                         {% endif %}
+
                         <div class="input-field">
                             <select name="prioridad" id="id_prioridad">
                                 <option value="1">Alta</option>

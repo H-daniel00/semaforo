@@ -1,6 +1,13 @@
-<select name="direccion" id="id_direccion">
-    {% for dir in dirFilter %}
-    <option value="{{dir.id}}">{{dir.nombre}}</option>
-    {% endfor %}
-</select>
-<label for="id_direccion">Seleccione una dirección</label>
+{% if dirFilter.count > 0 or user_dir %}
+<div class="input-field">
+    <select name="direccion" id="id_direccion">
+        {% if user_dir %}
+        <option value="{{user_dir.id}}" selected>Mi dirección</option>
+        {% endif %}
+        {% for dir in dirFilter %}
+        <option value="{{dir.id}}">{{dir.nombre}}</option>
+        {% endfor %}
+    </select>
+    <label for="id_direccion">Seleccione una dirección</label>
+</div>
+{% endif %}
